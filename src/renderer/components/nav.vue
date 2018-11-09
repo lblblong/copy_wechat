@@ -21,7 +21,6 @@
         <span class="icon-menu"></span>
       </div>
     </div>
-    
 
   </div>
 </template>
@@ -34,7 +33,7 @@ export default {}
 #nav {
   width: 100%;
   height: 100%;
-  background-color: #272a2f;
+  background: linear-gradient(#202020, #2a2a2a);
   display: flex;
   flex-direction: column;
   align-items: center;

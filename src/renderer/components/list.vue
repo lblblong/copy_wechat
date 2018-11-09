@@ -11,32 +11,45 @@
     </header>
 
     <ul>
-      <li>
-        <img src="../assets/avatar.jpg" alt="">
+      <li @click="current = chat.id" :class="{active:current==chat.id}" v-for="chat in chats" :key="chat.id">
+        <img :src="chat.avatar">
         <div class="meta">
           <div class="top">
-            <span class="name">lblblong</span>
-            <span class="time">21:37</span>
+            <span class="name">{{chat.name}}</span>
+            <span class="time">{{chat.time}}</span>
           </div>
-          <div class="last_msg">好的</div>
-        </div>
-      </li>
-      <li>
-        <img src="../assets/avatar.jpg" alt="">
-        <div class="meta">
-          <div class="top">
-            <span class="name">客户</span>
-            <span class="time">07:44</span>
-          </div>
-          <div class="last_msg">已经付款啦</div>
+          <div class="last_msg">{{chat.last_msg}}</div>
         </div>
       </li>
     </ul>
+
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      chats: [
+        {
+          id: 1,
+          name: 'lblblong',
+          time: '10:55',
+          last_msg: '好的',
+          avatar: require('@/assets/avatar.jpg')
+        },
+        {
+          id: 2,
+          name: '文件传输助手',
+          time: '07:44',
+          last_msg: '明天去吃烤鸭',
+          avatar: require('@/assets/avatar.jpg')
+        }
+      ],
+      current: 1
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -44,13 +57,15 @@ export default {}
   width: 100%;
   height: 100%;
   background-color: #ebe8e7;
+  display: flex;
+  flex-direction: column;
 
   header {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 25px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     .search {
       height: 25px;
       width: 190px;
@@ -77,7 +92,11 @@ export default {}
   }
 
   ul {
+    flex: 1;
+    overflow-y: scroll;
+    width: 267px;
     padding: 0px;
+    margin: 0px;
     list-style: none;
     li {
       padding: 13px;
@@ -113,6 +132,14 @@ export default {}
           color: #6c6a6a;
         }
       }
+    }
+
+    li:hover:not(.active) {
+      background-color: #dfdcdb;
+    }
+
+    .active {
+      background-color: #c6c5c5;
     }
   }
 }

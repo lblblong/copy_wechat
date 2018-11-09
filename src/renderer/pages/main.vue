@@ -29,6 +29,7 @@ export default {
   }
   .list {
     width: 250px;
+    overflow-x: hidden;
   }
   .chat {
     flex: 1;

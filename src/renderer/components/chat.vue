@@ -1,11 +1,128 @@
 <template>
-  <div id="chat" style="-webkit-app-region: drag">
+  <div id="chat">
+    <chat-header class="chat_header" style="-webkit-app-region: drag">
+    </chat-header>
 
+    <div class="chat_body">
+      <div class="chat_window" ref="chatWindow">
+        <div class="message" v-for="msg in msgs" :key="msg.id">
+          <div class="opposite" v-if="msg.from == 2">
+            <img :src="msg.user.avatar" alt="">
+            <message-text :direction="msg.from" :msg="msg.data"></message-text>
+          </div>
+
+          <div class="self" v-if="msg.from == 1">
+            <message-text :direction="msg.from" :msg="msg.data"></message-text>
+            <img :src="msg.user.avatar" alt="">
+          </div>
+        </div>
+        <!-- <message-img></message-img> -->
+      </div>
+    </div>
+
+    <footer>
+      <div class="toolbar">
+        <span><span class="icon-emoji"></span></span>
+        <span><span class="icon-file"></span></span>
+        <span><span class="icon-cut"></span></span>
+        <span><span class="icon-message"></span></span>
+      </div>
+      <div>
+        <textarea rows="3" v-model="message" @keyup.enter="submit"></textarea>
+      </div>
+      <div class="sent_warp">
+        <button>发送(S)</button>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
-export default {}
+// 消息类型
+const MSG_TYPE_TEXT = 1
+
+// 消息来自
+const MSG_FROM_SELF = 1
+const MSG_FROM_OPPOSITE = 2
+
+import ChatHeader from './chat_header'
+import MessageText from './message_text'
+import MessageImg from './message_img'
+export default {
+  components: {
+    ChatHeader,
+    MessageText,
+    MessageImg
+  },
+  data() {
+    return {
+      msgs: [
+        {
+          id: 1,
+          type: MSG_TYPE_TEXT,
+          from: MSG_FROM_SELF,
+          user: {
+            avatar: require('@/assets/avatar.jpg')
+          },
+          data: '辣鸡'
+        },
+        {
+          id: 2,
+          type: MSG_TYPE_TEXT,
+          from: MSG_FROM_SELF,
+          user: {
+            avatar: require('@/assets/avatar.jpg')
+          },
+          data: '看我的青眼白龙'
+        },
+        {
+          id: 3,
+          type: MSG_TYPE_TEXT,
+          from: MSG_FROM_OPPOSITE,
+          user: {
+            avatar: require('@/assets/avatar.jpg')
+          },
+          data: '渣渣，还是黑魔导厉害'
+        },
+        {
+          id: 4,
+          type: MSG_TYPE_TEXT,
+          from: MSG_FROM_OPPOSITE,
+          user: {
+            avatar: require('@/assets/avatar.jpg')
+          },
+          data: '渣渣，还是黑魔导厉害'
+        },
+        {
+          id: 5,
+          type: MSG_TYPE_TEXT,
+          from: MSG_FROM_OPPOSITE,
+          user: {
+            avatar: require('@/assets/avatar.jpg')
+          },
+          data: '渣渣，还是黑魔导厉害'
+        }
+      ],
+      message: ''
+    }
+  },
+  methods: {
+    submit() {
+      if (!this.message) return
+      this.msgs.push({
+        id: this.msgs.length,
+        type: MSG_TYPE_TEXT,
+        from: MSG_FROM_SELF,
+        user: {
+          avatar: require('@/assets/avatar.jpg')
+        },
+        data: this.message
+      })
+      this.message = ''
+      this.$refs.chatWindow.scrollTop = 100000
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -13,5 +130,101 @@ export default {}
   width: 100%;
   height: 100%;
   background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  .chat_header {
+    height: 60px;
+  }
+
+  .chat_body {
+    flex: 1;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    .chat_window {
+      height: 100%;
+      width: calc(100% + #{17px});
+      overflow-y: scroll;
+      padding: 0px;
+      margin: 0px;
+      > .message:last-of-type {
+        margin-bottom: 8px;
+      }
+    }
+    .opposite,
+    .self {
+      display: flex;
+      padding: 0 16px;
+      margin-top: 15px;
+      img {
+        width: 35px;
+        height: 35px;
+      }
+    }
+    .opposite {
+      justify-content: flex-start;
+      img {
+        margin-right: 8px;
+      }
+    }
+    .self {
+      justify-content: flex-end;
+      img {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  footer {
+    height: 145px;
+    background-color: white;
+    border-top: 1px solid #e5e5e5;
+    padding: 6px 15px;
+    .toolbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      > span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 34px;
+        height: 30px;
+        > span {
+          font-size: 18px;
+        }
+        .icon-cut {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+    }
+    textarea {
+      width: 100%;
+      height: 100%;
+      resize: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-weight: 500px;
+      padding: 8px;
+    }
+    .sent_warp {
+      display: flex;
+      justify-content: flex-end;
+      button {
+        width: 68px;
+        height: 26px;
+        border: 1px solid #e5e5e5;
+        background-color: #f5f5f5;
+        font-size: 14px;
+        outline: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #129611;
+        color: #fff;
+      }
+    }
+  }
 }
 </style>

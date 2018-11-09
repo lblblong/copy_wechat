@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .wp {
+        position: relative;
+        margin: 50px;
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+      .top {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 0;
+        height: 10px;
+        border: 5px solid;
+        border-color: white;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+      }
+      .cen {
+        position: absolute;
+        right: 0;
+        top: 20px;
+        width: 0;
+        height: 100%;
+        border: 5px solid;
+        border-color: white;
+        border-left-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+      }
+
+      .bottom {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 0;
+        border: 5px solid;
+        border-color: white;
+        border-left-color: transparent;
+        border-top-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wp">
+      <img
+        src="http://pic31.photophoto.cn/20140504/0035035504358088_b.jpg"
+        alt=""
+      />
+      <div class="top"></div>
+      <div class="cen"></div>
+      <div class="bottom"></div>
+    </div>
+  </body>
+</html>

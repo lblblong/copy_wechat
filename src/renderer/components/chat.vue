@@ -6,17 +6,25 @@
     <div class="chat_body">
       <div class="chat_window" ref="chatWindow">
         <div class="message" v-for="msg in msgs" :key="msg.id">
-          <div class="opposite" v-if="msg.from == 2">
+          <div class="opposite" v-if="msg.from == constant.MSG_FROM_OPPOSITE">
             <img :src="msg.user.avatar" alt="">
-            <message-text :direction="msg.from" :msg="msg.data"></message-text>
+
+            <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
+            <message-img-l v-if="msg.type == constant.MSG_TYPE_IMG" :src="msg.data"></message-img-l>
+            <message-video-l v-if="msg.type == constant.MSG_TYPE_VIDEO" :data="msg.data"></message-video-l>
+            <message-transfer v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
+            <message-voice v-if="msg.type == constant.MSG_TYPE_VOICE" :direction="msg.from" :data="msg.data"></message-voice>
           </div>
 
-          <div class="self" v-if="msg.from == 1">
-            <message-text :direction="msg.from" :msg="msg.data"></message-text>
+          <div class="self" v-if="msg.from == constant.MSG_FROM_SELF">
+            <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
+            <message-video-r v-if="msg.type == constant.MSG_TYPE_VIDEO" :data="msg.data"></message-video-r>
+            <message-transfer v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
+            <message-voice v-if="msg.type == constant.MSG_TYPE_VOICE" :direction="msg.from" :data="msg.data"></message-voice>
+            
             <img :src="msg.user.avatar" alt="">
           </div>
         </div>
-        <!-- <message-img></message-img> -->
       </div>
     </div>
 
@@ -38,72 +46,33 @@
 </template>
 
 <script>
-// 消息类型
-const MSG_TYPE_TEXT = 1
+import msgs from './data.js'
 
-// 消息来自
-const MSG_FROM_SELF = 1
-const MSG_FROM_OPPOSITE = 2
-
+import constant from '@/constant.js'
 import ChatHeader from './chat_header'
-import MessageText from './message_text'
-import MessageImg from './message_img'
+import MessageText from './messages/message_text'
+import MessageImgR from './messages/message_img_r'
+import MessageImgL from './messages/message_img_l'
+import MessageTransfer from './messages/message_transfer'
+import MessageVoice from './messages/message_voice'
+import MessageVideoR from './messages/message_video_r'
+import MessageVideoL from './messages/message_video_l'
 export default {
   components: {
     ChatHeader,
     MessageText,
-    MessageImg
+    MessageImgR,
+    MessageImgL,
+    MessageTransfer,
+    MessageVoice,
+    MessageVideoR,
+    MessageVideoL
   },
   data() {
     return {
-      msgs: [
-        {
-          id: 1,
-          type: MSG_TYPE_TEXT,
-          from: MSG_FROM_SELF,
-          user: {
-            avatar: require('@/assets/avatar.jpg')
-          },
-          data: '辣鸡'
-        },
-        {
-          id: 2,
-          type: MSG_TYPE_TEXT,
-          from: MSG_FROM_SELF,
-          user: {
-            avatar: require('@/assets/avatar.jpg')
-          },
-          data: '看我的青眼白龙'
-        },
-        {
-          id: 3,
-          type: MSG_TYPE_TEXT,
-          from: MSG_FROM_OPPOSITE,
-          user: {
-            avatar: require('@/assets/avatar.jpg')
-          },
-          data: '渣渣，还是黑魔导厉害'
-        },
-        {
-          id: 4,
-          type: MSG_TYPE_TEXT,
-          from: MSG_FROM_OPPOSITE,
-          user: {
-            avatar: require('@/assets/avatar.jpg')
-          },
-          data: '渣渣，还是黑魔导厉害'
-        },
-        {
-          id: 5,
-          type: MSG_TYPE_TEXT,
-          from: MSG_FROM_OPPOSITE,
-          user: {
-            avatar: require('@/assets/avatar.jpg')
-          },
-          data: '渣渣，还是黑魔导厉害'
-        }
-      ],
-      message: ''
+      msgs: msgs,
+      message: '',
+      constant: constant
     }
   },
   methods: {
@@ -111,8 +80,8 @@ export default {
       if (!this.message) return
       this.msgs.push({
         id: this.msgs.length,
-        type: MSG_TYPE_TEXT,
-        from: MSG_FROM_SELF,
+        type: constant.MSG_TYPE_TEXT,
+        from: constant.MSG_FROM_SELF,
         user: {
           avatar: require('@/assets/avatar.jpg')
         },

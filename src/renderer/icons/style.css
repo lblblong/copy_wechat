@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('./fonts/icomoon.eot?r43ytm');
-  src:  url('./fonts/icomoon.eot?r43ytm#iefix') format('embedded-opentype'),
-    url('./fonts/icomoon.ttf?r43ytm') format('truetype'),
-    url('./fonts/icomoon.woff?r43ytm') format('woff'),
-    url('./fonts/icomoon.svg?r43ytm#icomoon') format('svg');
+  src:  url('./fonts/icomoon.eot?hxf9nz');
+  src:  url('./fonts/icomoon.eot?hxf9nz#iefix') format('embedded-opentype'),
+    url('./fonts/icomoon.ttf?hxf9nz') format('truetype'),
+    url('./fonts/icomoon.woff?hxf9nz') format('woff'),
+    url('./fonts/icomoon.svg?hxf9nz#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,46 +23,65 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-message:before {
-  content: "\e903";
+.icon-safe:before {
+  content: "\e913";
 }
-.icon-emoji:before {
-  content: "\e907";
-}
-.icon-file:before {
-  content: "\e90a";
-}
-.icon-cut:before {
-  content: "\e90b";
-  color: #5e5e5e;
-}
-.icon-fixation:before {
-  content: "\e906";
-}
-.icon-min:before {
-  content: "\e904";
-}
-.icon-max:before {
-  content: "\e90c";
-}
-.icon-close:before {
-  content: "\e90d";
-}
-.icon-more:before {
-  content: "\e909";
-}
-.icon-add:before {
+.icon-transition:before {
   content: "\e900";
 }
-.icon-books:before {
+.icon-confirm:before {
   content: "\e901";
 }
-.icon-app:before {
+.icon-play:before {
   content: "\e902";
 }
-.icon-menu:before {
+.icon-voice_r:before {
+  content: "\e903";
+  color: #5c626b;
+}
+.icon-voice_l:before {
+  content: "\e904";
+}
+.icon-books:before {
   content: "\e905";
 }
-.icon-sreach:before {
+.icon-close:before {
+  content: "\e906";
+}
+.icon-cut:before {
+  content: "\e907";
+  color: #5e5e5e;
+}
+.icon-emoji:before {
   content: "\e908";
+}
+.icon-file:before {
+  content: "\e909";
+}
+.icon-fixation:before {
+  content: "\e90a";
+}
+.icon-max:before {
+  content: "\e90b";
+}
+.icon-menu:before {
+  content: "\e90c";
+}
+.icon-message:before {
+  content: "\e90d";
+}
+.icon-min:before {
+  content: "\e90e";
+}
+.icon-more:before {
+  content: "\e90f";
+}
+.icon-sreach:before {
+  content: "\e910";
+}
+.icon-add:before {
+  content: "\e911";
+}
+.icon-app:before {
+  content: "\e912";
 }

@@ -41,7 +41,10 @@ export default {
 
 <style scoped lang="scss">
 #message_text {
+  border: 1px solid #efefef;
+  border-radius: 4px;
   .content {
+    cursor: pointer;
     display: inline-block;
     position: relative;
     height: 96px;

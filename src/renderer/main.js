@@ -28,6 +28,10 @@ Vue.use(Select)
 Vue.use(TimePicker)
 Vue.use(DatePicker)
 
+if (localStorage.getItem('store')) {
+  console.log(localStorage.getItem('store'))
+}
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

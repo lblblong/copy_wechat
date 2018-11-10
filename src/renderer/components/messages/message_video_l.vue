@@ -56,6 +56,7 @@ export default {
 <style scoped lang="scss">
 #message_video_l {
   .wp {
+    cursor: pointer;
     position: relative;
     overflow: hidden;
   }

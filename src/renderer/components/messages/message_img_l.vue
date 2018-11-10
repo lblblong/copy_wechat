@@ -56,6 +56,7 @@ export default {
 <style scoped lang="scss">
 #message_img_l {
   .wp {
+    cursor: pointer;
     position: relative;
     overflow: hidden;
   }

@@ -114,7 +114,7 @@ export default [
     },
     data: {
       file_type: constant.FILE_TYPE_EXCEL,
-      name: '新建文本文档.doc',
+      name: '工作表1.xls',
       size: '26kb'
     }
   },

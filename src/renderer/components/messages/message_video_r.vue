@@ -59,6 +59,7 @@ export default {
 
 <style scoped lang="scss">
 #message_video_r {
+  cursor: pointer;
   position: relative;
   min-width: 80px;
   min-height: 80px;

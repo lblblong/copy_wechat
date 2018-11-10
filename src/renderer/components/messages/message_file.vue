@@ -57,7 +57,10 @@ export default {
 
 <style scoped lang="scss">
 #message_file {
+  border: 1px solid #efefef;
+  border-radius: 4px;
   .content {
+    cursor: pointer;
     display: inline-block;
     position: relative;
     height: 96px;
@@ -129,6 +132,9 @@ export default {
       right: -10px;
       border-color: transparent transparent transparent #fff;
     }
+  }
+  .content:hover {
+    background-color: #fafafa;
   }
 }
 </style>

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-var ipcRenderer = require('electron').ipcRenderer
+const ipcRenderer = require('electron').ipcRenderer
 export default {
   methods: {
     minus() {

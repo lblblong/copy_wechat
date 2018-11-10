@@ -134,12 +134,6 @@ export default {
       this.transfer.now = msg
       this.transfer.step = 1
       this.transfer.show = true
-    },
-    transferDialogClick(event) {
-      console.log(event)
-    },
-    ok(event) {
-      console.log('ok触发', event)
     }
   }
 }
@@ -303,6 +297,7 @@ export default {
 
   .dialog > .wait {
     .btn {
+      cursor: pointer;
       height: 41px;
       width: 180px;
       background-color: #1aad19;

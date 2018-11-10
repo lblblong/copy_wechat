@@ -1,4 +1,4 @@
-import constant from '@/constant.js'
+import constant from '../constant'
 
 export default [
   {
@@ -104,5 +104,47 @@ export default [
       img: 'http://pic31.photophoto.cn/20140504/0035035504358088_b.jpg',
       len: '00:34'
     }
-  }
+  },
+  {
+    id: 11,
+    type: constant.MSG_TYPE_FILE,
+    from: constant.MSG_FROM_SELF,
+    user: {
+      avatar: require('@/assets/avatar.jpg')
+    },
+    data: {
+      file_type: constant.FILE_TYPE_EXCEL,
+      name: '新建文本文档.doc',
+      size: '26kb'
+    }
+  },
+  {
+    id: 12,
+    type: constant.MSG_TYPE_FILE,
+    from: constant.MSG_FROM_OPPOSITE,
+    user: {
+      avatar: require('@/assets/avatar.jpg')
+    },
+    data: {
+      file_type: constant.FILE_TYPE_WORD,
+      name: '新建文本文档.doc',
+      size: '26kb'
+    }
+  },
+  {
+    id: 13,
+    from: constant.MSG_FROM_SYSTEM,
+    user: {
+      avatar: require('@/assets/avatar.jpg')
+    },
+    data: "9:18"
+  },
+  {
+    id: 14,
+    from: constant.MSG_FROM_SYSTEM,
+    user: {
+      avatar: require('@/assets/avatar.jpg')
+    },
+    data: "昨天 20:25"
+  },
 ]

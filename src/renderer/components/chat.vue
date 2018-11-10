@@ -6,25 +6,52 @@
     <div class="chat_body">
       <div class="chat_window" ref="chatWindow">
         <div class="message" v-for="msg in msgs" :key="msg.id">
-          <div class="opposite" v-if="msg.from == constant.MSG_FROM_OPPOSITE">
-            <img :src="msg.user.avatar" alt="">
-
-            <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
-            <message-img-l v-if="msg.type == constant.MSG_TYPE_IMG" :src="msg.data"></message-img-l>
-            <message-video-l v-if="msg.type == constant.MSG_TYPE_VIDEO" :data="msg.data"></message-video-l>
-            <message-transfer v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
-            <message-voice v-if="msg.type == constant.MSG_TYPE_VOICE" :direction="msg.from" :data="msg.data"></message-voice>
+          <div class="sys_msg" v-if="msg.from == constant.MSG_FROM_SYSTEM">
+            <span>{{msg.data}}</span>
           </div>
+          <div v-else :class="getClass(msg.from)">
+            <img v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="msg.user.avatar" alt="">
 
-          <div class="self" v-if="msg.from == constant.MSG_FROM_SELF">
+            <!-- 文字消息 -->
             <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
-            <message-video-r v-if="msg.type == constant.MSG_TYPE_VIDEO" :data="msg.data"></message-video-r>
-            <message-transfer v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
+
+            <!-- 图片消息 -->
+            <message-img-l v-if="msg.type == constant.MSG_TYPE_IMG && msg.from == constant.MSG_FROM_OPPOSITE" :src="msg.data"></message-img-l>
+            <message-img-r v-if="msg.type == constant.MSG_TYPE_IMG && msg.from == constant.MSG_FROM_SELF" :src="msg.data"></message-img-r>
+
+            <!-- 视频消息 -->
+            <message-video-l v-if="msg.type == constant.MSG_TYPE_VIDEO && msg.from == constant.MSG_FROM_OPPOSITE" :data="msg.data"></message-video-l>
+            <message-video-r v-if="msg.type == constant.MSG_TYPE_VIDEO && msg.from == constant.MSG_FROM_SELF" :data="msg.data"></message-video-r>
+
+            <!-- 转账消息 -->
+            <message-transfer @click.native="transferClick(msg)" v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
+
+            <!-- 语言消息 -->
             <message-voice v-if="msg.type == constant.MSG_TYPE_VOICE" :direction="msg.from" :data="msg.data"></message-voice>
-            
-            <img :src="msg.user.avatar" alt="">
+
+            <!-- 文件消息 -->
+            <message-file v-if="msg.type == constant.MSG_TYPE_FILE" :direction="msg.from" :data="msg.data"></message-file>
+            <img v-if="msg.from == constant.MSG_FROM_SELF" :src="msg.user.avatar" alt="">
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="dialog" v-show="transfer.show" @click="transfer.show = false">
+      <div v-if="transfer.step == 1" class="wait">
+        <img src="../assets/wait.png" alt="">
+        <div class="title">待确认收钱</div>
+        <div class="num">￥0.1</div>
+        <div class="btn" @click.stop="transfer.step = 2">确认收钱</div>
+        <div class="des">1天内未确认，将退还给对方 <span>立即退还</span></div>
+        <div class="time">转账时间：2018-11-09 21:26:03</div>
+      </div>
+      <div v-else class="ok">
+        <img src="../assets/ok.png" alt="">
+        <div class="title">已收钱</div>
+        <div class="num">￥0.1</div>
+        <div class="z_time">转账时间：2018-11-09 21:26:03</div>
+        <div class="s_time">收钱时间：2018-11-10 10:26:03</div>
       </div>
     </div>
 
@@ -48,7 +75,7 @@
 <script>
 import msgs from './data.js'
 
-import constant from '@/constant.js'
+import constant from '../constant.js'
 import ChatHeader from './chat_header'
 import MessageText from './messages/message_text'
 import MessageImgR from './messages/message_img_r'
@@ -57,6 +84,7 @@ import MessageTransfer from './messages/message_transfer'
 import MessageVoice from './messages/message_voice'
 import MessageVideoR from './messages/message_video_r'
 import MessageVideoL from './messages/message_video_l'
+import MessageFile from './messages/message_file'
 export default {
   components: {
     ChatHeader,
@@ -66,16 +94,25 @@ export default {
     MessageTransfer,
     MessageVoice,
     MessageVideoR,
-    MessageVideoL
+    MessageVideoL,
+    MessageFile
   },
   data() {
     return {
       msgs: msgs,
       message: '',
-      constant: constant
+      constant: constant,
+      transfer: {
+        show: true,
+        now: null,
+        step: 1
+      }
     }
   },
   methods: {
+    getClass(from) {
+      return from == constant.MSG_FROM_SELF ? 'self' : 'opposite'
+    },
     submit() {
       if (!this.message) return
       this.msgs.push({
@@ -89,6 +126,20 @@ export default {
       })
       this.message = ''
       this.$refs.chatWindow.scrollTop = 100000
+    },
+    transferClick(msg) {
+      if (msg.data.type != constant.TRANSFER_PUBLISH) {
+        return
+      }
+      this.transfer.now = msg
+      this.transfer.step = 1
+      this.transfer.show = true
+    },
+    transferDialogClick(event) {
+      console.log(event)
+    },
+    ok(event) {
+      console.log('ok触发', event)
     }
   }
 }
@@ -96,6 +147,7 @@ export default {
 
 <style scoped lang="scss">
 #chat {
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: #f5f5f5;
@@ -139,6 +191,19 @@ export default {
       justify-content: flex-end;
       img {
         margin-left: 8px;
+      }
+    }
+    .sys_msg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+      > span {
+        font-size: 10px;
+        color: #fff;
+        background-color: #dadada;
+        border-radius: 2px;
+        padding: 5px 8px;
       }
     }
   }
@@ -193,6 +258,85 @@ export default {
         background-color: #129611;
         color: #fff;
       }
+    }
+  }
+
+  .dialog {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+  }
+
+  .dialog > .wait,
+  .ok {
+    width: 300px;
+    height: 430px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    z-index: 100;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -215px;
+    margin-left: -150px;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+    box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.1);
+    img {
+      height: 78px;
+      margin-top: 65px;
+    }
+    .title {
+      font-size: 22px;
+      margin-top: 16px;
+      font-weight: 500;
+    }
+    .num {
+      font-size: 34px;
+      margin-top: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .dialog > .wait {
+    .btn {
+      height: 41px;
+      width: 180px;
+      background-color: #1aad19;
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+    .des {
+      font-size: 14px;
+      margin-top: 22px;
+      color: #a5a5a5;
+      span {
+        color: #426794;
+      }
+    }
+    .time {
+      font-size: 14px;
+      margin-top: 40px;
+      color: #a5a5a5;
+    }
+  }
+
+  .dialog > .ok {
+    .z_time {
+      margin-top: 126px;
+      font-size: 14px;
+      color: #a5a5a5;
+    }
+    .s_time {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #a5a5a5;
     }
   }
 }

@@ -13,6 +13,13 @@ const TRANSFER_RECEIVE = 2 // 接收
 // 消息来自
 const MSG_FROM_SELF = 1
 const MSG_FROM_OPPOSITE = 2
+const MSG_FROM_SYSTEM = 3
+
+const FILE_TYPE_UNKNOWN = 1
+const FILE_TYPE_TEXT = 2
+const FILE_TYPE_EXCEL = 3
+const FILE_TYPE_WORD = 4
+const FILE_TYPE_ZIP = 5
 
 module.exports = {
   // 消息类型
@@ -27,5 +34,12 @@ module.exports = {
   TRANSFER_RECEIVE,
   // 消息来自
   MSG_FROM_SELF,
-  MSG_FROM_OPPOSITE
+  MSG_FROM_OPPOSITE,
+  MSG_FROM_SYSTEM,
+  // 文件类型
+  FILE_TYPE_UNKNOWN,
+  FILE_TYPE_TEXT,
+  FILE_TYPE_EXCEL,
+  FILE_TYPE_WORD,
+  FILE_TYPE_ZIP
 }

@@ -1,7 +1,8 @@
 <template>
   <div id="message_text">
     <div class="content">
-      {{msg}}
+      <!-- {{msg}} -->
+      <div class="message" v-html="msg"></div>
       <div class="arrows" :class="_direction">
       </div>
     </div>
@@ -24,12 +25,15 @@ export default {
   .content {
     display: inline-block;
     position: relative;
-    height: 35px;
     border-radius: 4px;
     background-color: #9eea6a;
     padding: 10px;
     font-size: 14px;
     font-weight: 500;
+    max-width: 400px;
+    .message {
+      line-height: 1.5;
+    }
     .arrows {
       position: absolute;
       top: 12px;

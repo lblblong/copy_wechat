@@ -1,13 +1,13 @@
 <template>
   <div id="nav">
     <div class="avatar">
-      <img src="../assets/avatar.jpg" alt="">
+      <img @click="changeUser(constant.MSG_FROM_SELF)" :src="self.avatar" alt="">
     </div>
 
     <div class="actions">
       <ul>
         <li>
-          <img src="../assets/ic_聊天.png" alt="">
+          <img src="../assets/ic_聊天.png"  @click="changeAvatar" alt="">
         </li>
         <li>
           <span class="icon-books"></span>
@@ -17,16 +17,60 @@
         </li>
       </ul>
 
-      <div class="menu">
+      <div class="menu" @click="chatManage">
         <span class="icon-menu"></span>
       </div>
-    </div>
 
+    </div>
+    <dialog-chat-manage :event="chat_manage_event"></dialog-chat-manage>
+    <dialog-change-avatar :event="change_avatar_event"></dialog-change-avatar>
   </div>
 </template>
 
 <script>
-export default {}
+import EventEmitter from 'eventemitter3'
+import constant from '../constant.js'
+import { Message } from 'element-ui'
+import { mapGetters, mapMutations } from 'vuex'
+import DialogChatManage from './dialogs/chat_manage'
+import DialogChangeAvatar from './dialogs/change_avatar'
+export default {
+  components: {
+    DialogChatManage,
+    DialogChangeAvatar
+  },
+  computed: {
+    ...mapGetters(['self'])
+  },
+  data() {
+    return {
+      constant: constant,
+      chat_manage_event: null,
+      change_avatar_event: null
+    }
+  },
+  created() {
+    this.chat_manage_event = new EventEmitter()
+    this.change_avatar_event = new EventEmitter()
+  },
+  methods: {
+    ...mapMutations(['changeNowUser']),
+    changeUser(user) {
+      this.changeNowUser(user)
+      if (user == constant.MSG_FROM_SELF) {
+        Message.success(`已切换为自己`)
+      } else {
+        Message.success(`已切换为对方`)
+      }
+    },
+    chatManage() {
+      this.chat_manage_event.emit('open')
+    },
+    changeAvatar() {
+      this.change_avatar_event.emit('open')
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -38,6 +82,7 @@ export default {}
   flex-direction: column;
   align-items: center;
   .avatar {
+    cursor: pointer;
     width: 35px;
     height: 35px;
     margin-top: 16px;
@@ -64,6 +109,7 @@ export default {}
     flex-direction: column;
     align-items: center;
     li {
+      cursor: pointer;
       width: 25px;
       height: 25px;
       margin-top: 25px;
@@ -75,6 +121,7 @@ export default {}
   }
 
   .menu {
+    cursor: pointer;
     width: 25px;
     height: 25px;
     margin-bottom: 16px;

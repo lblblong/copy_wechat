@@ -1,7 +1,7 @@
 <template>
   <div id="chat_header">
-    <div class="name">
-      <div>文件传输助手</div>
+    <div class="name" style="-webkit-app-region: no-drag">
+      <div @click="changeUser(constant.MSG_FROM_OPPOSITE)">{{nowChat.user}}</div>
     </div>
     <div class="actions" style="-webkit-app-region: no-drag">
       <div class="toolbar">
@@ -26,14 +26,34 @@
 </template>
 
 <script>
+import constant from '../constant.js'
+import { Message } from 'element-ui'
+import { mapGetters, mapMutations } from 'vuex'
 const ipcRenderer = require('electron').ipcRenderer
 export default {
+  computed: {
+    ...mapGetters(['nowChat'])
+  },
+  data() {
+    return {
+      constant: constant
+    }
+  },
   methods: {
+    ...mapMutations(['changeNowUser']),
     minus() {
       ipcRenderer.send('window-min')
     },
     cross() {
-      ipcRenderer.send('window-close')
+      this.$store.commit('close')
+    },
+    changeUser(user) {
+      this.changeNowUser(user)
+      if (user == constant.MSG_FROM_SELF) {
+        Message.success(`已切换为自己`)
+      } else {
+        Message.success(`已切换为对方`)
+      }
     }
   }
 }
@@ -48,6 +68,7 @@ export default {
   align-items: center;
   padding-left: 15px;
   .name {
+    cursor: pointer;
     margin: 0 15px;
     font-size: 18px;
     font-weight: 580;

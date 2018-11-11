@@ -34,6 +34,5 @@ export default {
   .chat {
     flex: 1;
   }
-
 }
 </style>

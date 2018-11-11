@@ -5,12 +5,12 @@
 
     <div class="chat_body">
       <div class="chat_window" ref="chatWindow">
-        <div class="message" v-for="msg in msgs" :key="msg.id">
+        <div class="message" v-for="(msg,index) in nowChat.msgs" :key="index">
           <div class="sys_msg" v-if="msg.from == constant.MSG_FROM_SYSTEM">
             <span>{{msg.data}}</span>
           </div>
           <div v-else :class="getClass(msg.from)">
-            <img v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="msg.user.avatar" alt="">
+            <img @click="changeUser(constant.MSG_FROM_OPPOSITE)" v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="nowChat.avatar" alt="">
 
             <!-- 文字消息 -->
             <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
@@ -31,7 +31,7 @@
 
             <!-- 文件消息 -->
             <message-file v-if="msg.type == constant.MSG_TYPE_FILE" :direction="msg.from" :data="msg.data"></message-file>
-            <img v-if="msg.from == constant.MSG_FROM_SELF" :src="msg.user.avatar" alt="">
+            <img @click="changeUser(constant.MSG_FROM_SELF)" v-if="msg.from == constant.MSG_FROM_SELF" :src="self.avatar" alt="">
           </div>
         </div>
       </div>
@@ -41,15 +41,15 @@
       <div v-if="transfer.step == 1" class="wait">
         <img src="../assets/wait.png" alt="">
         <div class="title">待确认收钱</div>
-        <div class="num">￥0.1</div>
-        <div class="btn" @click.stop="transfer.step = 2">确认收钱</div>
+        <div class="num">￥{{transfer.now.data.num}}</div>
+        <div class="btn" @click.stop="affirmTransfer">确认收钱</div>
         <div class="des">1天内未确认，将退还给对方 <span>立即退还</span></div>
         <div class="time">转账时间：2018-11-09 21:26:03</div>
       </div>
       <div v-else class="ok">
         <img src="../assets/ok.png" alt="">
         <div class="title">已收钱</div>
-        <div class="num">￥0.1</div>
+        <div class="num">￥{{transfer.now.data.num}}</div>
         <div class="z_time">转账时间：2018-11-09 21:26:03</div>
         <div class="s_time">收钱时间：2018-11-10 10:26:03</div>
       </div>
@@ -57,10 +57,10 @@
 
     <footer>
       <div class="toolbar">
-        <span><span class="icon-emoji"></span></span>
-        <span><span class="icon-file"></span></span>
-        <span><span class="icon-cut"></span></span>
-        <span><span class="icon-message"></span></span>
+        <span @click="openVoiceDialog"><span class="icon-emoji"></span></span>
+        <span @click="openFileDialog"><span class="icon-file"></span></span>
+        <span @click="openTransferDialog"><span class="icon-cut"></span></span>
+        <span @click="openImgVideoDialog"><span class="icon-message"></span></span>
       </div>
       <div>
         <textarea rows="3" v-model="message" @keyup.enter="submit"></textarea>
@@ -69,11 +69,19 @@
         <button>发送(S)</button>
       </div>
     </footer>
+
+    <dialog-file :event="file_event"></dialog-file>
+    <dialog-transfer :event="transter_event"></dialog-transfer>
+    <dialog-img-video :event="img_video_event"></dialog-img-video>
+    <dialog-voice :event="voice_event"></dialog-voice>
   </div>
 </template>
 
 <script>
-import msgs from './data.js'
+import EventEmitter from 'eventemitter3'
+import { Message } from 'element-ui'
+import dayjs from 'dayjs'
+import { mapGetters, mapMutations } from 'vuex'
 
 import constant from '../constant.js'
 import ChatHeader from './chat_header'
@@ -85,6 +93,11 @@ import MessageVoice from './messages/message_voice'
 import MessageVideoR from './messages/message_video_r'
 import MessageVideoL from './messages/message_video_l'
 import MessageFile from './messages/message_file'
+
+import DialogFile from './dialogs/file'
+import DialogTransfer from './dialogs/transfer'
+import DialogImgVideo from './dialogs/img_video'
+import DialogVoice from './dialogs/voice'
 export default {
   components: {
     ChatHeader,
@@ -95,38 +108,57 @@ export default {
     MessageVoice,
     MessageVideoR,
     MessageVideoL,
-    MessageFile
+    MessageFile,
+    DialogFile,
+    DialogTransfer,
+    DialogImgVideo,
+    DialogVoice
+  },
+  computed: {
+    ...mapGetters(['nowChat', 'self', 'nowUser'])
   },
   data() {
     return {
-      msgs: msgs,
       message: '',
       constant: constant,
       transfer: {
-        show: true,
-        now: null,
+        show: false,
+        now: {
+          data: {}
+        },
         step: 1
-      }
+      },
+      file_event: null,
+      transter_event: null,
+      img_video_event: null,
+      voice_event:null
     }
   },
+  created() {
+    this.file_event = new EventEmitter()
+    this.transter_event = new EventEmitter()
+    this.img_video_event = new EventEmitter()
+    this.voice_event = new EventEmitter()
+  },
   methods: {
+    ...mapMutations(['pushMessage', 'changeNowUser']),
     getClass(from) {
       return from == constant.MSG_FROM_SELF ? 'self' : 'opposite'
     },
     submit() {
       if (!this.message) return
-      this.msgs.push({
-        id: this.msgs.length,
+      this.pushMessage({
+        chat_id: this.nowChat.id,
+        id: this.nowChat.msgs.length,
         type: constant.MSG_TYPE_TEXT,
-        from: constant.MSG_FROM_SELF,
-        user: {
-          avatar: require('@/assets/avatar.jpg')
-        },
-        data: this.message
+        from: this.nowUser,
+        data: this.message,
+        time: dayjs().format('HH:mm')
       })
       this.message = ''
       this.$refs.chatWindow.scrollTop = 100000
     },
+    // 转账点击
     transferClick(msg) {
       if (msg.data.type != constant.TRANSFER_PUBLISH) {
         return
@@ -134,6 +166,45 @@ export default {
       this.transfer.now = msg
       this.transfer.step = 1
       this.transfer.show = true
+    },
+    // 确认收钱
+    affirmTransfer() {
+      this.transfer.step = 2
+      let from =
+        this.transfer.now.from == constant.MSG_FROM_SELF
+          ? constant.MSG_FROM_OPPOSITE
+          : constant.MSG_FROM_SELF
+      this.pushMessage({
+        chat_id: this.nowChat.id,
+        id: this.nowChat.msgs.length,
+        type: constant.MSG_TYPE_TRANSFER,
+        from,
+        data: {
+          num: this.transfer.now.data.num,
+          type: constant.TRANSFER_RECEIVE
+        },
+        time: dayjs().format('HH:mm')
+      })
+    },
+    changeUser(user) {
+      this.changeNowUser(user)
+      if (user == constant.MSG_FROM_SELF) {
+        Message.success(`已切换为自己`)
+      } else {
+        Message.success(`已切换为对方`)
+      }
+    },
+    openFileDialog() {
+      this.file_event.emit('open')
+    },
+    openTransferDialog() {
+      this.transter_event.emit('open')
+    },
+    openImgVideoDialog() {
+      this.img_video_event.emit('open')
+    },
+    openVoiceDialog() {
+      this.voice_event.emit('open')
     }
   }
 }
@@ -173,6 +244,7 @@ export default {
       img {
         width: 35px;
         height: 35px;
+        cursor: pointer;
       }
     }
     .opposite {
@@ -212,6 +284,7 @@ export default {
       display: flex;
       align-items: center;
       > span {
+        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -223,6 +296,9 @@ export default {
         .icon-cut {
           font-size: 16px;
           font-weight: bold;
+        }
+        &:hover {
+          background-color: #efefef;
         }
       }
     }

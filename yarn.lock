@@ -2225,6 +2225,10 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "http://registry.npm.taobao.org/date-now/download/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
+dayjs@^1.7.7:
+  version "1.7.7"
+  resolved "http://registry.npm.taobao.org/dayjs/download/dayjs-1.7.7.tgz#8df20f78ac2476e3f5348ef49f8f22ebc3016370"
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/de-indent/download/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -2278,10 +2282,6 @@ deep-extend@^0.6.0:
 deepmerge@^1.2.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-1.5.2.tgz#10499d868844cdad4fee0842df8c7f6f0c95a753"
-
-deepmerge@^2.1.1:
-  version "2.2.1"
-  resolved "http://registry.npm.taobao.org/deepmerge/download/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
 default-gateway@^2.6.0:
   version "2.7.2"
@@ -2610,7 +2610,7 @@ electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.47:
   version "1.3.83"
   resolved "http://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.3.83.tgz#74584eb0972bb6777811c5d68d988c722f5e6666"
 
-electron@^2.0.4, electron@^2.0.8:
+electron@^2.0.4:
   version "2.0.13"
   resolved "http://registry.npm.taobao.org/electron/download/electron-2.0.13.tgz#db3949cf4d9d4569be0cec010624746793a406c9"
   dependencies:
@@ -2757,7 +2757,7 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "http://registry.npm.taobao.org/etag/download/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
-eventemitter3@^3.0.0:
+eventemitter3@^3.0.0, eventemitter3@^3.1.0:
   version "3.1.0"
   resolved "http://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
 
@@ -6857,19 +6857,9 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.5.16, vue@^2.5.17:
+vue@^2.5.16:
   version "2.5.17"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
-
-vuex-electron@^1.0.0:
-  version "1.0.0"
-  resolved "http://registry.npm.taobao.org/vuex-electron/download/vuex-electron-1.0.0.tgz#bac7b7640edde056207965518137f1e6b4d90cfb"
-  dependencies:
-    deepmerge "^2.1.1"
-    electron "^2.0.8"
-    electron-store "^2.0.0"
-    vue "^2.5.17"
-    vuex "^3.0.1"
 
 vuex@^3.0.1:
   version "3.0.1"

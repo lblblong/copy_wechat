@@ -27,7 +27,6 @@ export default {
       this.url = newImg.src
       let width = newImg.width
       let height = newImg.height
-      console.log(width, height)
       if (width > height && width > 120) {
         this.$refs.img.style.width = '120px'
         let h = height * (120 / width)
@@ -43,11 +42,6 @@ export default {
         }
         this.$refs.img.style.width = w + 'px'
       }
-    }
-  },
-  methods: {
-    load() {
-      console.log('图片一家在')
     }
   }
 }

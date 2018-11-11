@@ -19,7 +19,10 @@ import {
   Input,
   Select,
   TimePicker,
-  DatePicker
+  DatePicker,
+  Option,
+  Form,
+  FormItem
 } from 'element-ui'
 Vue.use(Button)
 Vue.use(Dialog)
@@ -27,10 +30,9 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(TimePicker)
 Vue.use(DatePicker)
-
-if (localStorage.getItem('store')) {
-  console.log(localStorage.getItem('store'))
-}
+Vue.use(Option)
+Vue.use(Form)
+Vue.use(FormItem)
 
 /* eslint-disable no-new */
 new Vue({

@@ -5,8 +5,16 @@
         <el-form-item label="名字" prop="name">
           <el-input v-model="msg.name" placeholder="名字"></el-input>
         </el-form-item>
-        <el-form-item label="头像URL" prop="avatar">
-          <el-input v-model="msg.avatar" placeholder="头像URL"></el-input>
+        <el-form-item class="image" label="头像" prop="avatar">
+          <!-- <el-input v-model="msg.avatar" placeholder="头像URL"></el-input> -->
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :show-file-list="false"
+            :http-request="upImg">
+            <p v-if="!msg.avatar">点击选择</p>
+            <img v-else :src="msg.avatar" alt="">
+          </el-upload>
         </el-form-item>
       </el-form>
       
@@ -16,6 +24,7 @@
 </template>
 
 <script>
+import lrz from 'lrz'
 import dayjs from 'dayjs'
 import constant from '../../constant'
 import { mapGetters, mapMutations } from 'vuex'
@@ -26,8 +35,7 @@ export default {
       visible: false,
       msg: {
         name: '',
-        avatar:
-          'https://avatar-static.segmentfault.com/425/270/4252702309-5a1510af3804c_big64'
+        avatar: ''
       },
       rules: {
         name: [{ required: true, message: '请输入名字', trigger: 'blur' }],
@@ -76,6 +84,13 @@ export default {
     },
     open() {
       this.visible = true
+    },
+    async upImg(req) {
+      try {
+        let file = req.file
+        let lrzfile = await lrz(file)
+        this.msg.avatar = lrzfile.base64
+      } catch (err) {}
     }
   },
   created() {
@@ -85,4 +100,12 @@ export default {
 </script>
 
 <style scoped>
+.image {
+  display: flex;
+  align-items: center;
+}
+img {
+  width: 100px;
+  height: 100px;
+}
 </style>

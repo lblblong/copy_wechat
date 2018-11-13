@@ -50,6 +50,9 @@ export default {
       case constant.FILE_TYPE_ZIP:
         this.data.icon = require('../../assets/ic_file_zip.png')
         break
+      case constant.FILE_TYPE_PDF:
+        this.data.icon = require('../../assets/ic_file_pdf.png')
+        break
     }
   }
 }

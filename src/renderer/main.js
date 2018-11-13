@@ -25,7 +25,8 @@ import {
   FormItem,
   Dropdown,
   DropdownItem,
-  DropdownMenu
+  DropdownMenu,
+  Upload
 } from 'element-ui'
 Vue.use(Button)
 Vue.use(Dialog)
@@ -39,6 +40,7 @@ Vue.use(FormItem)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
+Vue.use(Upload)
 
 /* eslint-disable no-new */
 new Vue({

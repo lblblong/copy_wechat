@@ -10,7 +10,7 @@
             <span>{{msg.data}}</span>
           </div>
           <div v-else :class="getClass(msg.from)">
-            <img @click="changeUser(constant.MSG_FROM_OPPOSITE)" v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="nowChat.avatar" alt="">
+            <img @click="delMsg(msg.id)" v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="nowChat.avatar" alt="">
 
             <!-- 文字消息 -->
             <message-text v-if="msg.type == constant.MSG_TYPE_TEXT" :direction="msg.from" :msg="msg.data"></message-text>
@@ -31,7 +31,15 @@
 
             <!-- 文件消息 -->
             <message-file v-if="msg.type == constant.MSG_TYPE_FILE" :direction="msg.from" :data="msg.data"></message-file>
-            <img @click="changeUser(constant.MSG_FROM_SELF)" v-if="msg.from == constant.MSG_FROM_SELF" :src="self.avatar" alt="">
+
+            <!-- 语音通话消息 -->
+            <message-call-voice v-if="msg.type == constant.MSG_TYPE_VOICE_CALL" :direction="msg.from" :data="msg.data"></message-call-voice>
+
+            <!-- 视频通话消息 -->
+            <message-call-video v-if="msg.type == constant.MSG_TYPE_VIDEO_CALL" :direction="msg.from" :data="msg.data"></message-call-video>
+
+
+            <img @click="delMsg(msg.id)" v-if="msg.from == constant.MSG_FROM_SELF" :src="self.avatar" alt="">
           </div>
         </div>
       </div>
@@ -77,6 +85,8 @@ import MessageVoice from './messages/message_voice'
 import MessageVideoR from './messages/message_video_r'
 import MessageVideoL from './messages/message_video_l'
 import MessageFile from './messages/message_file'
+import MessageCallVoice from './messages/message_call_voice'
+import MessageCallVideo from './messages/message_call_video'
 
 export default {
   components: {
@@ -88,7 +98,9 @@ export default {
     MessageVoice,
     MessageVideoR,
     MessageVideoL,
-    MessageFile
+    MessageFile,
+    MessageCallVoice,
+    MessageCallVideo
   },
   computed: {
     ...mapGetters(['nowChat', 'self', 'nowUser'])
@@ -99,8 +111,11 @@ export default {
       constant: constant
     }
   },
+  created() {
+    console.log(this.nowChat)
+  },
   methods: {
-    ...mapMutations(['pushMessage', 'changeNowUser']),
+    ...mapMutations(['pushMessage', 'changeNowUser', 'delMsg']),
     getClass(from) {
       return from == constant.MSG_FROM_SELF ? 'self' : 'opposite'
     },
@@ -115,7 +130,7 @@ export default {
         time: dayjs().format('HH:mm')
       })
       this.message = ''
-      this.$refs.chatWindow.scrollTop = 100000
+      // this.$refs.chatWindow.scrollTop = 100000
     },
     // 转账点击
     transferClick(msg) {
@@ -137,6 +152,9 @@ export default {
       }
     },
     openTransferWindow(msg) {
+      ipcRenderer.on('winURL', (event, msg) => {
+        alert(msg)
+      })
       ipcRenderer.once('transfer_on_msg', (event, msg) => {
         msg = JSON.parse(msg)
         msg.chat_id = this.nowChat.id
@@ -251,7 +269,7 @@ export default {
           font-weight: 100;
           font-size: 20px;
         }
-        .icon-video_1{
+        .icon-video_1 {
           font-weight: 500;
           font-size: 22px;
         }

@@ -59,6 +59,10 @@ export default {
         {
           label: '未知后缀文件',
           value: constant.FILE_TYPE_UNKNOWN
+        },
+        {
+          label: 'PDF',
+          value: constant.FILE_TYPE_PDF
         }
       ],
       rules: {

@@ -80,6 +80,8 @@ ipc.on('window-close', function() {
 let msg
 
 ipc.on('open_transfer_window', function(event_main, _msg) {
+  // event_main.sender.send('winURL', winURL)
+
   msg = _msg
   transferWindow = new BrowserWindow({
     height: 430,
@@ -98,7 +100,7 @@ ipc.on('open_transfer_window', function(event_main, _msg) {
     event_main.sender.send('transfer_on_msg', pub_msg)
   })
 
-  transferWindow.loadURL(winURL + '/#/transfer')
+  transferWindow.loadURL(winURL + '#/transfer')
 
   transferWindow.on('closed', () => {
     transferWindow = null

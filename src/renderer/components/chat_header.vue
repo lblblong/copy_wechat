@@ -26,10 +26,10 @@
             <el-dropdown-item @click.native="actionHandler('file')">发送文件</el-dropdown-item>
             <el-dropdown-item @click.native="actionHandler('transter')">发送转账</el-dropdown-item>
             <el-dropdown-item @click.native="actionHandler('img_video')">发送图片和视频</el-dropdown-item>
-            <el-dropdown-item @click.native="actionHandler('video_call')">发送视频或语音通话</el-dropdown-item>
+            <el-dropdown-item @click.native="actionHandler('call')">发送视频或语音通话</el-dropdown-item>
             <el-dropdown-item @click.native="actionHandler('system')">发送系统消息</el-dropdown-item>
             <el-dropdown-item @click.native="actionHandler('set_user')">修改双方信息</el-dropdown-item>
-            <el-dropdown-item @click.native="actionHandler('msg_manage')">消息管理</el-dropdown-item>
+            <!-- <el-dropdown-item @click.native="actionHandler('msg_manage')">消息管理</el-dropdown-item> -->
             <el-dropdown-item @click.native="actionHandler('change_user_self')">切换为自己</el-dropdown-item>
             <el-dropdown-item @click.native="actionHandler('change_user_opposite')">切换为对方</el-dropdown-item>
           </el-dropdown-menu>
@@ -41,6 +41,7 @@
       <dialog-voice :event="voice_event"></dialog-voice>
       <dialog-system :event="system_event"></dialog-system>
       <dialog-change-info :event="change_info_event"></dialog-change-info>
+      <dialog-call :event="call_event"></dialog-call>
 
     </div>
   </div>
@@ -59,6 +60,7 @@ import DialogImgVideo from './dialogs/img_video'
 import DialogVoice from './dialogs/voice'
 import DialogSystem from './dialogs/system'
 import DialogChangeInfo from './dialogs/change_info'
+import DialogCall from './dialogs/call'
 export default {
   components: {
     DialogFile,
@@ -66,7 +68,8 @@ export default {
     DialogImgVideo,
     DialogVoice,
     DialogSystem,
-    DialogChangeInfo
+    DialogChangeInfo,
+    DialogCall
   },
   computed: {
     ...mapGetters(['nowChat'])
@@ -80,6 +83,7 @@ export default {
       voice_event: null,
       system_event: null,
       change_info_event: null,
+      call_event: null,
     }
   },
   created() {
@@ -89,6 +93,7 @@ export default {
     this.voice_event = new EventEmitter()
     this.system_event = new EventEmitter()
     this.change_info_event = new EventEmitter()
+    this.call_event = new EventEmitter()
   },
   methods: {
     ...mapMutations(['changeNowUser']),
@@ -120,8 +125,8 @@ export default {
         case 'voice':
           this.voice_event.emit('open')
           break
-        case 'video_call':
-          this.voice_event.emit('open')
+        case 'call':
+          this.call_event.emit('open')
           break
         case 'system':
           this.system_event.emit('open')

@@ -16,9 +16,9 @@
         <div class="meta">
           <div class="top">
             <span class="name">{{chat.user}}</span>
-            <span class="time">{{chat.last_msg.time}}</span>
+            <span class="time">{{getLastMsg(chat).time}}</span>
           </div>
-          <div class="last_msg">{{msgContentText(chat.last_msg)}}</div>
+          <div class="last_msg">{{msgContentText(getLastMsg(chat))}}</div>
         </div>
       </li>
     </ul>
@@ -49,6 +49,18 @@ export default {
   },
   methods: {
     ...mapMutations(['changeChat']),
+    getLastMsg(chat) {
+      for (let i = chat.msgs.length - 1; i >= 0; i--) {
+        if (chat.msgs[i].type) {
+          return chat.msgs[i]
+        }
+      }
+      return {
+        type: constant.MSG_TYPE_TEXT,
+        data: '暂无消息',
+        time: dayjs().format('HH:mm')
+      }
+    },
     msgContentText(last_msg) {
       switch (last_msg.type) {
         case constant.MSG_TYPE_TEXT:
@@ -63,6 +75,10 @@ export default {
           return '[视频]'
         case constant.MSG_TYPE_FILE:
           return '[文件]'
+        case constant.MSG_TYPE_VIDEO_CALL:
+          return '[视频聊天]'
+        case constant.MSG_TYPE_VOICE_CALL:
+          return '[语音聊天]'
       }
     },
     addChat() {
@@ -148,8 +164,12 @@ export default {
           }
         }
         .last_msg {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           margin-top: 4px;
           font-size: 12px;
+          width: 160px;
           color: #6c6a6a;
         }
       }

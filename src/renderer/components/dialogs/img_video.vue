@@ -14,8 +14,15 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="地址URL" prop="url">
-          <el-input v-model="msg.url" placeholder="图片地址"></el-input>
+        <el-form-item class="image" label="图片" prop="url">
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :show-file-list="false"
+            :http-request="imgUP">
+            <p v-if="!msg.url">点击选择</p>
+            <img v-else :src="msg.url" alt="">
+          </el-upload>
         </el-form-item>
         <el-form-item v-if="msg.type=='视频'" label="视频时长" prop="len">
           <el-input v-model="msg.len" placeholder="视频时长"></el-input>
@@ -28,6 +35,7 @@
 </template>
 
 <script>
+import lrz from 'lrz'
 import dayjs from 'dayjs'
 import constant from '../../constant'
 import { mapGetters, mapMutations } from 'vuex'
@@ -85,7 +93,14 @@ export default {
     },
     open() {
       this.visible = true
-    }
+    },
+    async imgUP(req) {
+      try {
+        let file = req.file
+        let lrzfile = await lrz(file)
+        this.msg.url = lrzfile.base64
+      } catch (err) {}
+    },
   },
   created() {
     this.event.on('open', this.open)
@@ -94,4 +109,12 @@ export default {
 </script>
 
 <style scoped>
+.image{
+  display: flex;
+  align-items: center;
+}
+img {
+  width: 100px;
+  height: 100px;
+}
 </style>

@@ -7,7 +7,7 @@ import Vue from 'vue'
 
 const store = new Store()
 
-const state = store.get('data', {
+const def = {
   self: {
     avatar: require('../../assets/avatar.jpg')
   },
@@ -70,14 +70,7 @@ const state = store.get('data', {
             '三、聊天输入框上的四个按键，分别是<br/>1. 语音<br/>2. 文件<br/>3. 转账<br/>4. 图片和视频',
           time: dayjs().format('HH:mm')
         }
-      ],
-      last_msg: {
-        id: 2,
-        type: constant.MSG_TYPE_IMG,
-        from: constant.MSG_FROM_OPPOSITE,
-        data: require('../../assets/img_guide_1.png'),
-        time: dayjs().format('HH:mm')
-      }
+      ]
     },
     {
       id: 1,
@@ -94,24 +87,52 @@ const state = store.get('data', {
             size: '26kb'
           },
           time: dayjs().format('HH:mm')
-        }
-      ],
-      last_msg: {
-        id: 0,
-        type: constant.MSG_TYPE_FILE,
-        from: constant.MSG_FROM_OPPOSITE,
-        data: {
-          file_type: constant.FILE_TYPE_WORD,
-          name: '新建文本文档.doc',
-          size: '26kb'
         },
-        time: dayjs().format('HH:mm')
-      }
+        {
+          id: 1,
+          type: constant.MSG_TYPE_VOICE_CALL,
+          from: constant.MSG_FROM_OPPOSITE,
+          data: {
+            len: '00:45'
+          },
+          time: dayjs().format('HH:mm')
+        },
+        {
+          id: 2,
+          type: constant.MSG_TYPE_VOICE_CALL,
+          from: constant.MSG_FROM_SELF,
+          data: {
+            len: '00:14'
+          },
+          time: dayjs().format('HH:mm')
+        },
+        {
+          id: 3,
+          type: constant.MSG_TYPE_VIDEO_CALL,
+          from: constant.MSG_FROM_SELF,
+          data: {
+            len: '00:14'
+          },
+          time: dayjs().format('HH:mm')
+        },
+        {
+          id: 4,
+          type: constant.MSG_TYPE_VIDEO_CALL,
+          from: constant.MSG_FROM_OPPOSITE,
+          data: {
+            len: '00:14'
+          },
+          time: dayjs().format('HH:mm')
+        }
+      ]
     }
   ],
   _nowChat: null,
   nowUser: constant.MSG_FROM_SELF
-})
+}
+
+const state = store.get('data', def)
+// const state = def
 
 const mutations = {
   changeChat: (state, id) => {
@@ -133,12 +154,15 @@ const mutations = {
       let chat = state.chats[i]
       if (chat.id == msg.chat_id) {
         chat.msgs.push(msg)
-        if (msg.type) {
-          chat.last_msg = msg
-        }
       }
     }
     state.chats = state.chats
+  },
+  delMsg: (state, id) => {
+    let nowChat = state._nowChat || state.chats[0]
+    nowChat.msgs = nowChat.msgs.filter(msg => {
+      return msg.id != id
+    })
   },
   changeNowUser: (state, nowUser) => {
     state.nowUser = nowUser

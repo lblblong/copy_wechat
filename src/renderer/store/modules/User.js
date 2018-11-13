@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import Store from 'electron-store'
 const ipcRenderer = require('electron').ipcRenderer
 import { Message } from 'element-ui'
+import Vue from 'vue'
 
 const store = new Store()
 
@@ -115,6 +116,17 @@ const state = store.get('data', {
 const mutations = {
   changeChat: (state, id) => {
     state._nowChat = state.chats.find(it => it.id == id)
+  },
+  changeNowChatInfo: (state, chat) => {
+    if (state._nowChat) {
+      state._nowChat.user = chat.user
+      state._nowChat.avatar = chat.avatar
+      state._nowChat = state._nowChat
+    } else {
+      state.chats[0].user = chat.user
+      state.chats[0].avatar = chat.avatar
+      state.chats = state.chats
+    }
   },
   pushMessage: (state, msg) => {
     for (let i = 0; i < state.chats.length; i++) {

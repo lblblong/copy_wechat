@@ -28,28 +28,6 @@ export default {
         num: '',
         msg: ''
       },
-      file_types: [
-        {
-          label: '文档',
-          value: constant.FILE_TYPE_WORD
-        },
-        {
-          label: '表格',
-          value: constant.FILE_TYPE_EXCEL
-        },
-        {
-          label: '文本',
-          value: constant.FILE_TYPE_TEXT
-        },
-        {
-          label: '压缩文件',
-          value: constant.FILE_TYPE_ZIP
-        },
-        {
-          label: '未知后缀文件',
-          value: constant.FILE_TYPE_UNKNOWN
-        }
-      ],
       rules: {
         num: [{ required: true, message: '请输入金额', trigger: 'blur' }]
       }
@@ -74,7 +52,8 @@ export default {
           data: {
             num: this.msg.num,
             msg: this.msg.msg || '',
-            type: constant.TRANSFER_PUBLISH
+            type: constant.TRANSFER_PUBLISH,
+            publish_time: dayjs().format('YYYY-MM-DD HH:mm:ss')
           },
           time: dayjs().format('HH:mm')
         })

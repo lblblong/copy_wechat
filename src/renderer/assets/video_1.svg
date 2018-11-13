@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1542093494032" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17529" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128"><defs><style type="text/css">@font-face { font-family: Arial; src: local("Source Han Sans SC"); }
+@font-face { font-family: Tahoma; src: local("Source Han Sans SC"); }
+@font-face { font-family: Verdana; src: local("Source Han Sans SC"); }
+@font-face { font-family: "Helvetica Neue"; src: local("Source Han Sans SC"); }
+@font-face { font-family: Helvetica; src: local("Source Han Sans SC"); }
+@font-face { font-family: "Segoe UI"; src: local("Source Han Sans SC"); }
+@font-face { font-family: Courier; src: local("Source Code Pro"); }
+@font-face { font-family: "Courier New"; src: local("Source Code Pro"); }
+@font-face { font-family: Consolas; src: local("Source Code Pro"); }
+@font-face { font-family: SimSun; src: local("Source Han Sans SC"); }
+@font-face { font-family: SimSun-ExtB; src: local("Source Han Sans SC"); }
+@font-face { font-family: 宋体; src: local("Source Han Sans SC"); }
+@font-face { font-family: NSimSun; src: local("Source Han Sans SC"); }
+@font-face { font-family: 新宋体; src: local("Source Han Sans SC"); }
+@font-face { font-family: SimHei; src: local("Source Han Sans SC"); }
+@font-face { font-family: 黑体; src: local("Source Han Sans SC"); }
+@font-face { font-family: "Microsoft YaHei"; src: local("Source Han Sans SC"); }
+@font-face { font-family: 微软雅黑; src: local("Source Han Sans SC"); }
+@font-face { font-family: "STHeiti SC"; src: local("PingFang SC"); }
+@font-face { font-family: MingLiU; src: local("Source Han Sans TC"); }
+@font-face { font-family: MingLiU-ExtB; src: local("Source Han Sans TC"); }
+@font-face { font-family: MingLiU_HKSCS; src: local("Source Han Sans TC"); }
+@font-face { font-family: MingLiU_HKSCS-ExtB; src: local("Source Han Sans TC"); }
+@font-face { font-family: PMingLiU; src: local("Source Han Sans TC"); }
+@font-face { font-family: PMingLiU-ExtB; src: local("Source Han Sans TC"); }
+@font-face { font-family: "Microsoft JhengHei"; src: local("Source Han Sans TC"); }
+@font-face { font-family: 微軟正黑體; src: local("Source Han Sans TC"); }
+@font-face { font-family: "STHeiti TC"; src: local("PingFang TC"); }
+</style></defs><path d="M650.1 791.9H92c-38.6 0-70-31.4-70-70V305c0-38.6 31.4-70 70-70h558c38.6 0 70 31.4 70 70v416.9c0.1 38.6-31.3 70-69.9 70zM92 275c-16.5 0-30 13.5-30 30v416.9c0 16.5 13.5 30 30 30h558c16.5 0 30-13.5 30-30V305c0-16.5-13.5-30-30-30H92zM982 791.9c-3.4 0-6.8-0.9-9.8-2.6l-208-117.2c-6.3-3.5-10.2-10.2-10.2-17.4V369.3c0-7.2 3.9-13.9 10.2-17.4l208-117.2c6.2-3.5 13.8-3.4 19.9 0.2 6.1 3.6 9.9 10.2 9.9 17.3v519.9c0 7.1-3.8 13.7-9.9 17.3-3.1 1.6-6.6 2.5-10.1 2.5zM794 643l168 94.7V286.3L794 381v262z" p-id="17530"></path></svg>

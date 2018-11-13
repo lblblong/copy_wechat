@@ -13,6 +13,11 @@ export default new Router({
     {
       path: '*',
       redirect: '/'
+    },
+    {
+      path: '/transfer',
+      name: 'main',
+      component: require('@/pages/transfer').default
     }
   ]
 })

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('./fonts/icomoon.eot?hxf9nz');
-  src:  url('./fonts/icomoon.eot?hxf9nz#iefix') format('embedded-opentype'),
-    url('./fonts/icomoon.ttf?hxf9nz') format('truetype'),
-    url('./fonts/icomoon.woff?hxf9nz') format('woff'),
-    url('./fonts/icomoon.svg?hxf9nz#icomoon') format('svg');
+  src:  url('./fonts/icomoon.eot?cf3kjw');
+  src:  url('./fonts/icomoon.eot?cf3kjw#iefix') format('embedded-opentype'),
+    url('./fonts/icomoon.ttf?cf3kjw') format('truetype'),
+    url('./fonts/icomoon.woff?cf3kjw') format('woff'),
+    url('./fonts/icomoon.svg?cf3kjw#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,65 +23,77 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-safe:before {
-  content: "\e913";
-}
-.icon-transition:before {
+.icon-video_1:before {
   content: "\e900";
 }
-.icon-confirm:before {
+.icon-call_0:before {
   content: "\e901";
 }
-.icon-play:before {
+.icon-call_1:before {
   content: "\e902";
 }
-.icon-voice_r:before {
+.icon-video_0:before {
   content: "\e903";
-  color: #5c626b;
 }
-.icon-voice_l:before {
+.icon-message:before {
   content: "\e904";
 }
-.icon-books:before {
+.icon-min:before {
   content: "\e905";
 }
-.icon-close:before {
+.icon-more:before {
   content: "\e906";
 }
-.icon-cut:before {
+.icon-play:before {
   content: "\e907";
+}
+.icon-safe:before {
+  content: "\e908";
+}
+.icon-sreach:before {
+  content: "\e909";
+}
+.icon-transition:before {
+  content: "\e90a";
+}
+.icon-voice_l:before {
+  content: "\e90b";
+}
+.icon-voice_r:before {
+  content: "\e90c";
+  color: #5c626b;
+}
+.icon-add:before {
+  content: "\e90d";
+}
+.icon-app:before {
+  content: "\e90e";
+}
+.icon-books:before {
+  content: "\e90f";
+}
+.icon-close:before {
+  content: "\e910";
+}
+.icon-confirm:before {
+  content: "\e911";
+}
+.icon-cut:before {
+  content: "\e912";
   color: #5e5e5e;
 }
 .icon-emoji:before {
-  content: "\e908";
+  content: "\e913";
 }
 .icon-file:before {
-  content: "\e909";
+  content: "\e914";
 }
 .icon-fixation:before {
-  content: "\e90a";
+  content: "\e915";
 }
 .icon-max:before {
-  content: "\e90b";
+  content: "\e916";
 }
 .icon-menu:before {
-  content: "\e90c";
-}
-.icon-message:before {
-  content: "\e90d";
-}
-.icon-min:before {
-  content: "\e90e";
-}
-.icon-more:before {
-  content: "\e90f";
-}
-.icon-sreach:before {
-  content: "\e910";
-}
-.icon-add:before {
-  content: "\e911";
-}
-.icon-app:before {
-  content: "\e912";
+  content: "\e917";
 }

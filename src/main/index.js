@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcRenderer } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'development') {
     .replace(/\\/g, '\\\\')
 }
 
-let mainWindow
+let mainWindow, transferWindow
 const winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
@@ -33,6 +33,12 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  mainWindow.on('focus', () => {
+    if (transferWindow) {
+      transferWindow.close()
+    }
   })
 }
 
@@ -66,6 +72,37 @@ ipc.on('window-max', function() {
 })
 ipc.on('window-close', function() {
   mainWindow.close()
+  if (transferWindow) {
+    transferWindow.close()
+  }
+})
+
+let msg
+
+ipc.on('open_transfer_window', function(event_main, _msg) {
+  msg = _msg
+  transferWindow = new BrowserWindow({
+    height: 430,
+    width: 300,
+    frame: false
+  })
+
+  // 转账窗口获取消息
+  ipc.on('transfer_get_msg', (event, _) => {
+    event.returnValue = msg
+  })
+
+  // 转账窗口发布消息到主窗口
+  ipc.on('transfer_pub_msg', (event, pub_msg) => {
+    // 发送到主窗口
+    event_main.sender.send('transfer_on_msg', pub_msg)
+  })
+
+  transferWindow.loadURL(winURL + '/#/transfer')
+
+  transferWindow.on('closed', () => {
+    transferWindow = null
+  })
 })
 
 /**

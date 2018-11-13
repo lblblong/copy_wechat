@@ -7,7 +7,7 @@
     <div class="actions">
       <ul>
         <li>
-          <img src="../assets/ic_聊天.png"  @click="changeAvatar" alt="">
+          <img src="../assets/ic_聊天.png" alt="">
         </li>
         <li>
           <span class="icon-books"></span>
@@ -23,7 +23,6 @@
 
     </div>
     <dialog-chat-manage :event="chat_manage_event"></dialog-chat-manage>
-    <dialog-change-avatar :event="change_avatar_event"></dialog-change-avatar>
   </div>
 </template>
 
@@ -33,11 +32,9 @@ import constant from '../constant.js'
 import { Message } from 'element-ui'
 import { mapGetters, mapMutations } from 'vuex'
 import DialogChatManage from './dialogs/chat_manage'
-import DialogChangeAvatar from './dialogs/change_avatar'
 export default {
   components: {
-    DialogChatManage,
-    DialogChangeAvatar
+    DialogChatManage
   },
   computed: {
     ...mapGetters(['self'])
@@ -45,13 +42,11 @@ export default {
   data() {
     return {
       constant: constant,
-      chat_manage_event: null,
-      change_avatar_event: null
+      chat_manage_event: null
     }
   },
   created() {
     this.chat_manage_event = new EventEmitter()
-    this.change_avatar_event = new EventEmitter()
   },
   methods: {
     ...mapMutations(['changeNowUser']),
@@ -65,9 +60,6 @@ export default {
     },
     chatManage() {
       this.chat_manage_event.emit('open')
-    },
-    changeAvatar() {
-      this.change_avatar_event.emit('open')
     }
   }
 }

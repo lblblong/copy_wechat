@@ -24,7 +24,7 @@
             <message-video-r v-if="msg.type == constant.MSG_TYPE_VIDEO && msg.from == constant.MSG_FROM_SELF" :data="msg.data"></message-video-r>
 
             <!-- 转账消息 -->
-            <message-transfer @click.native="transferClick(msg)" v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
+            <message-transfer @click.native="openTransferWindow(msg)" v-if="msg.type == constant.MSG_TYPE_TRANSFER" :direction="msg.from" :data="msg.data"></message-transfer>
 
             <!-- 语言消息 -->
             <message-voice v-if="msg.type == constant.MSG_TYPE_VOICE" :direction="msg.from" :data="msg.data"></message-voice>
@@ -37,30 +37,18 @@
       </div>
     </div>
 
-    <div class="dialog" v-show="transfer.show" @click="transfer.show = false">
-      <div v-if="transfer.step == 1" class="wait">
-        <img src="../assets/wait.png" alt="">
-        <div class="title">待确认收钱</div>
-        <div class="num">￥{{transfer.now.data.num}}</div>
-        <div class="btn" @click.stop="affirmTransfer">确认收钱</div>
-        <div class="des">1天内未确认，将退还给对方 <span>立即退还</span></div>
-        <div class="time">转账时间：2018-11-09 21:26:03</div>
-      </div>
-      <div v-else class="ok">
-        <img src="../assets/ok.png" alt="">
-        <div class="title">已收钱</div>
-        <div class="num">￥{{transfer.now.data.num}}</div>
-        <div class="z_time">转账时间：2018-11-09 21:26:03</div>
-        <div class="s_time">收钱时间：2018-11-10 10:26:03</div>
-      </div>
-    </div>
-
     <footer>
       <div class="toolbar">
-        <span @click="openVoiceDialog"><span class="icon-emoji"></span></span>
-        <span @click="openFileDialog"><span class="icon-file"></span></span>
-        <span @click="openTransferDialog"><span class="icon-cut"></span></span>
-        <span @click="openImgVideoDialog"><span class="icon-message"></span></span>
+        <div>
+          <span @click="openTransferWindow"><span class="icon-emoji"></span></span>
+          <span><span class="icon-file"></span></span>
+          <span><span class="icon-cut"></span></span>
+          <span><span class="icon-message"></span></span>
+        </div>
+        <div>
+          <span><span class="icon-call_1"></span></span>
+          <span><span class="icon-video_1"></span></span>
+        </div>
       </div>
       <div>
         <textarea rows="3" v-model="message" @keyup.enter="submit"></textarea>
@@ -70,15 +58,11 @@
       </div>
     </footer>
 
-    <dialog-file :event="file_event"></dialog-file>
-    <dialog-transfer :event="transter_event"></dialog-transfer>
-    <dialog-img-video :event="img_video_event"></dialog-img-video>
-    <dialog-voice :event="voice_event"></dialog-voice>
   </div>
 </template>
 
 <script>
-import EventEmitter from 'eventemitter3'
+const ipcRenderer = require('electron').ipcRenderer
 import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import { mapGetters, mapMutations } from 'vuex'
@@ -94,10 +78,6 @@ import MessageVideoR from './messages/message_video_r'
 import MessageVideoL from './messages/message_video_l'
 import MessageFile from './messages/message_file'
 
-import DialogFile from './dialogs/file'
-import DialogTransfer from './dialogs/transfer'
-import DialogImgVideo from './dialogs/img_video'
-import DialogVoice from './dialogs/voice'
 export default {
   components: {
     ChatHeader,
@@ -108,11 +88,7 @@ export default {
     MessageVoice,
     MessageVideoR,
     MessageVideoL,
-    MessageFile,
-    DialogFile,
-    DialogTransfer,
-    DialogImgVideo,
-    DialogVoice
+    MessageFile
   },
   computed: {
     ...mapGetters(['nowChat', 'self', 'nowUser'])
@@ -120,25 +96,8 @@ export default {
   data() {
     return {
       message: '',
-      constant: constant,
-      transfer: {
-        show: false,
-        now: {
-          data: {}
-        },
-        step: 1
-      },
-      file_event: null,
-      transter_event: null,
-      img_video_event: null,
-      voice_event:null
+      constant: constant
     }
-  },
-  created() {
-    this.file_event = new EventEmitter()
-    this.transter_event = new EventEmitter()
-    this.img_video_event = new EventEmitter()
-    this.voice_event = new EventEmitter()
   },
   methods: {
     ...mapMutations(['pushMessage', 'changeNowUser']),
@@ -161,30 +120,13 @@ export default {
     // 转账点击
     transferClick(msg) {
       if (msg.data.type != constant.TRANSFER_PUBLISH) {
-        return
+        this.transfer.step = 2
+      } else {
+        this.transfer.step = 1
       }
       this.transfer.now = msg
-      this.transfer.step = 1
       this.transfer.show = true
-    },
-    // 确认收钱
-    affirmTransfer() {
-      this.transfer.step = 2
-      let from =
-        this.transfer.now.from == constant.MSG_FROM_SELF
-          ? constant.MSG_FROM_OPPOSITE
-          : constant.MSG_FROM_SELF
-      this.pushMessage({
-        chat_id: this.nowChat.id,
-        id: this.nowChat.msgs.length,
-        type: constant.MSG_TYPE_TRANSFER,
-        from,
-        data: {
-          num: this.transfer.now.data.num,
-          type: constant.TRANSFER_RECEIVE
-        },
-        time: dayjs().format('HH:mm')
-      })
+      console.log(this.transfer.now)
     },
     changeUser(user) {
       this.changeNowUser(user)
@@ -194,17 +136,15 @@ export default {
         Message.success(`已切换为对方`)
       }
     },
-    openFileDialog() {
-      this.file_event.emit('open')
-    },
-    openTransferDialog() {
-      this.transter_event.emit('open')
-    },
-    openImgVideoDialog() {
-      this.img_video_event.emit('open')
-    },
-    openVoiceDialog() {
-      this.voice_event.emit('open')
+    openTransferWindow(msg) {
+      ipcRenderer.once('transfer_on_msg', (event, msg) => {
+        msg = JSON.parse(msg)
+        msg.chat_id = this.nowChat.id
+        msg.id = this.nowChat.msgs.length
+        this.pushMessage(msg)
+      })
+      console.log('发送转账消息', msg)
+      ipcRenderer.send('open_transfer_window', JSON.stringify(msg))
     }
   }
 }
@@ -239,7 +179,7 @@ export default {
     .opposite,
     .self {
       display: flex;
-      padding: 0 16px;
+      padding: 0 28px;
       margin-top: 15px;
       img {
         width: 35px;
@@ -283,22 +223,37 @@ export default {
       width: 100%;
       display: flex;
       align-items: center;
-      > span {
-        cursor: pointer;
+      justify-content: space-between;
+      div {
         display: flex;
-        justify-content: center;
         align-items: center;
-        width: 34px;
-        height: 30px;
         > span {
-          font-size: 18px;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 34px;
+          height: 30px;
+          > span {
+            font-size: 18px;
+          }
+          .icon-cut {
+            font-size: 16px;
+            font-weight: bold;
+          }
+          &:hover {
+            background-color: #efefef;
+          }
         }
-        .icon-cut {
-          font-size: 16px;
-          font-weight: bold;
+      }
+      div:last-child {
+        .icon-call_1 {
+          font-weight: 100;
+          font-size: 20px;
         }
-        &:hover {
-          background-color: #efefef;
+        .icon-video_1{
+          font-weight: 500;
+          font-size: 22px;
         }
       }
     }
@@ -328,86 +283,6 @@ export default {
         background-color: #129611;
         color: #fff;
       }
-    }
-  }
-
-  .dialog {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-  }
-
-  .dialog > .wait,
-  .ok {
-    width: 300px;
-    height: 430px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    z-index: 100;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -215px;
-    margin-left: -150px;
-    border: 1px solid #dfdfdf;
-    border-radius: 4px;
-    box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.1);
-    img {
-      height: 78px;
-      margin-top: 65px;
-    }
-    .title {
-      font-size: 22px;
-      margin-top: 16px;
-      font-weight: 500;
-    }
-    .num {
-      font-size: 34px;
-      margin-top: 20px;
-      font-weight: 500;
-    }
-  }
-
-  .dialog > .wait {
-    .btn {
-      cursor: pointer;
-      height: 41px;
-      width: 180px;
-      background-color: #1aad19;
-      margin-top: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
-    .des {
-      font-size: 14px;
-      margin-top: 22px;
-      color: #a5a5a5;
-      span {
-        color: #426794;
-      }
-    }
-    .time {
-      font-size: 14px;
-      margin-top: 40px;
-      color: #a5a5a5;
-    }
-  }
-
-  .dialog > .ok {
-    .z_time {
-      margin-top: 126px;
-      font-size: 14px;
-      color: #a5a5a5;
-    }
-    .s_time {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #a5a5a5;
     }
   }
 }

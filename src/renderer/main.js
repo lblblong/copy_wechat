@@ -22,7 +22,10 @@ import {
   DatePicker,
   Option,
   Form,
-  FormItem
+  FormItem,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu
 } from 'element-ui'
 Vue.use(Button)
 Vue.use(Dialog)
@@ -33,6 +36,9 @@ Vue.use(DatePicker)
 Vue.use(Option)
 Vue.use(Form)
 Vue.use(FormItem)
+Vue.use(Dropdown)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
 
 /* eslint-disable no-new */
 new Vue({

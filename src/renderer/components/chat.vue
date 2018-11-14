@@ -223,11 +223,11 @@ export default {
       justify-content: center;
       margin-top: 15px;
       > span {
-        font-size: 10px;
+        font-size: 12px;
         color: #fff;
         background-color: #dadada;
         border-radius: 2px;
-        padding: 5px 8px;
+        padding: 3px 8px;
       }
     }
   }

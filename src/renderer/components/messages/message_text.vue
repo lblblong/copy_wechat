@@ -1,6 +1,6 @@
 <template>
   <div id="message_text">
-    <div class="content">
+    <div class="content" :class="_direction">
       <!-- {{msg}} -->
       <div class="message" v-html="msg"></div>
       <div class="arrows" :class="_direction">
@@ -22,12 +22,13 @@ export default {
 
 <style scoped lang="scss">
 #message_text {
+  border: 1px solid #efefef;
   .content {
     display: inline-block;
     position: relative;
     border-radius: 4px;
     background-color: #9eea6a;
-    padding: 10px;
+    padding: 8px 10px;
     font-size: 14px;
     font-weight: 500;
     max-width: 400px;
@@ -50,6 +51,13 @@ export default {
     .right {
       right: -10px;
       border-color: transparent transparent transparent #9eea6a;
+    }
+  }
+
+  > .left {
+    background-color: #ffffff;
+    .left {
+      border-color: transparent #ffffff transparent transparent;
     }
   }
 }

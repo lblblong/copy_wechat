@@ -5,9 +5,9 @@
 
     <div class="chat_body">
       <div class="chat_window" ref="chatWindow">
-        <div class="message" v-for="(msg,index) in nowChat.msgs" :key="index">
+        <div class="message" v-for="(msg,index) in getNowChat().msgs" :key="index">
           <div class="sys_msg" v-if="msg.from == constant.MSG_FROM_SYSTEM">
-            <span>{{msg.data}}</span>
+            <span @click="delMsg(msg.id)">{{msg.data}}</span>
           </div>
           <div v-else :class="getClass(msg.from)">
             <img @click="delMsg(msg.id)" v-if="msg.from == constant.MSG_FROM_OPPOSITE" :src="nowChat.avatar" alt="">
@@ -37,7 +37,6 @@
 
             <!-- 视频通话消息 -->
             <message-call-video v-if="msg.type == constant.MSG_TYPE_VIDEO_CALL" :direction="msg.from" :data="msg.data"></message-call-video>
-
 
             <img @click="delMsg(msg.id)" v-if="msg.from == constant.MSG_FROM_SELF" :src="self.avatar" alt="">
           </div>
@@ -112,12 +111,23 @@ export default {
     }
   },
   created() {
-    console.log(this.nowChat)
+    window.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.keyCode == 83) {
+        this.changeUser(constant.MSG_FROM_SELF)
+      } else if (e.ctrlKey && e.keyCode == 79) {
+        this.changeUser(constant.MSG_FROM_OPPOSITE)
+      }
+    })
+
+    window.globalEvent.on('pubmsg', this.onPubmsgListener)
   },
   methods: {
     ...mapMutations(['pushMessage', 'changeNowUser', 'delMsg']),
     getClass(from) {
       return from == constant.MSG_FROM_SELF ? 'self' : 'opposite'
+    },
+    getNowChat() {
+      return this.nowChat
     },
     submit() {
       if (!this.message) return
@@ -130,7 +140,12 @@ export default {
         time: dayjs().format('HH:mm')
       })
       this.message = ''
-      // this.$refs.chatWindow.scrollTop = 100000
+    },
+    onPubmsgListener() {
+      this.$nextTick(() => {
+        this.$refs.chatWindow.scrollTop =
+          this.$refs.chatWindow.scrollHeight + 100
+      }, 0)
     },
     // 转账点击
     transferClick(msg) {
@@ -152,14 +167,13 @@ export default {
       }
     },
     openTransferWindow(msg) {
-      ipcRenderer.on('winURL', (event, msg) => {
-        alert(msg)
-      })
-      ipcRenderer.once('transfer_on_msg', (event, msg) => {
-        msg = JSON.parse(msg)
-        msg.chat_id = this.nowChat.id
-        msg.id = this.nowChat.msgs.length
-        this.pushMessage(msg)
+      ipcRenderer.removeAllListeners('transfer_on_msg')
+      ipcRenderer.once('transfer_on_msg', (event, _msg) => {
+        _msg = JSON.parse(_msg)
+        _msg.chat_id = this.nowChat.id
+        _msg.id = this.nowChat.msgs.length
+        this.pushMessage(_msg)
+        msg.data.receive_time = _msg.data.receive_time
       })
       console.log('发送转账消息', msg)
       ipcRenderer.send('open_transfer_window', JSON.stringify(msg))
@@ -223,6 +237,7 @@ export default {
       justify-content: center;
       margin-top: 15px;
       > span {
+        cursor: pointer;
         font-size: 12px;
         color: #fff;
         background-color: #dadada;

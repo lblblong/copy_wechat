@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      window.onload = function() {
+        HotKeyHandler.Init()
+      }
+      var HotKeyHandler = {
+        currentMainKey: null,
+        currentValueKey: null,
+        Init: function() {
+          HotKeyHandler.Register(0, 'K', function() {
+            alert('注册成功')
+          })
+        },
+        Register: function(tag, value, func) {
+          var MainKey = ''
+          switch (tag) {
+            case 0:
+              MainKey = 17 //Ctrl
+              break
+            case 1:
+              MainKey = 16 //Shift
+              break
+            case 2:
+              MainKey = '18' //Alt
+              break
+          }
+          document.onkeyup = function(e) {
+            HotKeyHandler.currentMainKey = null
+          }
+
+          document.onkeydown = function(event) {
+            //获取键值
+            var keyCode = event.keyCode
+            var keyValue = String.fromCharCode(event.keyCode)
+
+            if (HotKeyHandler.currentMainKey != null) {
+              if (keyValue == value) {
+                HotKeyHandler.currentMainKey = null
+                if (func != null) func()
+              }
+            }
+            if (keyCode == MainKey) HotKeyHandler.currentMainKey = keyCode
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    测试，按下ctrl+k你就会发现神奇的事情发生了
+  </body>
+</html>

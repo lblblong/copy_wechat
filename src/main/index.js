@@ -47,14 +47,17 @@ function createWindow() {
 }
 
 function createTransferWindow() {
-  let msg
+  let msg, mainBound
 
   transferWindow = new BrowserWindow({
     height: 430,
     width: 300,
     frame: false,
     show: false,
-    backgroundColor: '#ffffff',
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    parent: mainWindow,
     webPreferences: {
       backgroundThrottling: false
     }
@@ -74,9 +77,21 @@ function createTransferWindow() {
     msg = _msg
 
     transferIpc.send('transfer_show', msg)
-    setTimeout(() => {
-      transferWindow.show()
-    }, 1000)
+
+    // 聊天区域居中转账框
+    mainBound = mainWindow.getBounds()
+    transferWindow.setPosition(
+      parseInt(mainBound.x + 310 + (mainBound.width - 310) / 2 - 150),
+      parseInt(mainBound.y + mainBound.height / 2 - 215)
+    )
+
+    // transferWindow.setBounds({
+    //   x: parseInt(mainBound.x + 310 + (mainBound.width - 310) / 2 - 150),
+    //   y: parseInt(mainBound.y + mainBound.height / 2 - 215),
+    //   width: 300,
+    //   height: 430
+    // })
+    transferWindow.show()
 
     // 转账窗口发布消息到主窗口
     ipc.on('transfer_pub_msg', (event, pub_msg) => {

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="step == 1" class="wait" style="-webkit-app-region: drag">
+    <div v-if="step == 1 && !transfer.now.data.receive_time" class="wait" style="-webkit-app-region: drag">
       <img src="../assets/wait.png" alt="">
       <div class="title">待确认收钱</div>
       <div class="num">￥{{transfer.now.data.num}}</div>
-      <div class="btn" style="-webkit-app-region: no-drag" @click="affirmTransfer">确认收钱</div>
+      <div class="btn" v-show="step == 1 && !transfer.now.data.receive_time" style="-webkit-app-region: no-drag" @click="affirmTransfer">确认收钱</div>
       <div class="des">1天内未确认，将退还给对方 <span>立即退还</span></div>
       <div class="time">转账时间：{{transfer.now.data.publish_time}}</div>
     </div>
@@ -36,15 +36,15 @@ export default {
   created() {
     ipcRenderer.send('window_ipc_register', 'transfer')
 
-    ipcRenderer.on('hide',(event, _)=>{
+    ipcRenderer.on('hide', (event, _) => {
       this.transfer.now = {
         data: {}
       }
-      console.log('数据以改变')
     })
 
     ipcRenderer.on('transfer_show', (event, msg) => {
       this.transfer.now = JSON.parse(msg)
+      console.log('显示', this.transfer.now)
       if (this.transfer.now.data.type == constant.TRANSFER_RECEIVE) {
         this.step = 2
       } else {
@@ -89,7 +89,6 @@ export default {
   flex-direction: column;
   align-items: center;
   background-color: #fff;
-  border: 1px solid #dfdfdf;
   border-radius: 4px;
   img {
     height: 78px;

@@ -42,6 +42,9 @@ Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Upload)
 
+import EventEmitter from 'eventemitter3'
+window.globalEvent = new EventEmitter()
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

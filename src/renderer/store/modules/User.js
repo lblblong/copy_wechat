@@ -133,6 +133,7 @@ const def = {
 
 const state = store.get('data', def)
 // const state = def
+state._nowChat = state.chats[0]
 
 const mutations = {
   changeChat: (state, id) => {
@@ -156,7 +157,7 @@ const mutations = {
         chat.msgs.push(msg)
       }
     }
-    state.chats = state.chats
+    window.globalEvent.emit('pubmsg')
   },
   delMsg: (state, id) => {
     let nowChat = state._nowChat || state.chats[0]
@@ -193,10 +194,10 @@ const getters = {
   self: state => state.self,
   chats: state => state.chats,
   nowChat: state => {
-    if (state._nowChat) {
-      return state._nowChat
+    if (!state._nowChat) {
+      state._nowChat = state.chats[0] || {}
     }
-    return state.chats[0]
+    return state._nowChat
   },
   nowUser: state => state.nowUser
 }

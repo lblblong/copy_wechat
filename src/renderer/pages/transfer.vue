@@ -34,11 +34,23 @@ export default {
     }
   },
   created() {
-    let msg = ipcRenderer.sendSync('transfer_get_msg')
-    this.transfer.now = JSON.parse(msg)
-    if (this.transfer.now.data.type == constant.TRANSFER_RECEIVE) {
-      this.step = 2
-    }
+    ipcRenderer.send('window_ipc_register', 'transfer')
+
+    ipcRenderer.on('hide',(event, _)=>{
+      this.transfer.now = {
+        data: {}
+      }
+      console.log('数据以改变')
+    })
+
+    ipcRenderer.on('transfer_show', (event, msg) => {
+      this.transfer.now = JSON.parse(msg)
+      if (this.transfer.now.data.type == constant.TRANSFER_RECEIVE) {
+        this.step = 2
+      } else {
+        this.step = 1
+      }
+    })
   },
   methods: {
     // 确认收钱

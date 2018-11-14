@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcRenderer } from 'electron'
+import { app, BrowserWindow, ipcRenderer, ipcMain } from 'electron'
+const ipc = ipcMain
 
 /**
  * Set `__static` path to static files in production
@@ -11,22 +12,24 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow, transferWindow
+let transferIpc
 const winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
 function createWindow() {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     minHeight: 450,
     minWidth: 600,
     height: 700,
     useContentSize: true,
     width: 1000,
-    frame: false
+    frame: false,
+    backgroundColor: '#ffffff',
+    webPreferences: {
+      backgroundThrottling: false
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -36,13 +39,57 @@ function createWindow() {
   })
 
   mainWindow.on('focus', () => {
-    if (transferWindow) {
-      transferWindow.close()
+    if (transferWindow && transferWindow.isVisible()) {
+      transferIpc.send('hide')
+      transferWindow.hide()
     }
   })
 }
 
-app.on('ready', createWindow)
+function createTransferWindow() {
+  let msg
+
+  transferWindow = new BrowserWindow({
+    height: 430,
+    width: 300,
+    frame: false,
+    show: false,
+    backgroundColor: '#ffffff',
+    webPreferences: {
+      backgroundThrottling: false
+    }
+  })
+
+  transferWindow.loadURL(winURL + '#/transfer')
+
+  transferWindow.on('closed', () => {
+    transferWindow = null
+  })
+
+  transferWindow.once('ready-to-show', event => {
+    transferIpc = event.sender
+  })
+
+  ipc.on('open_transfer_window', function(event_main, _msg) {
+    msg = _msg
+
+    transferIpc.send('transfer_show', msg)
+    setTimeout(() => {
+      transferWindow.show()
+    }, 1000)
+
+    // 转账窗口发布消息到主窗口
+    ipc.on('transfer_pub_msg', (event, pub_msg) => {
+      // 发送到主窗口
+      event_main.sender.send('transfer_on_msg', pub_msg)
+    })
+  })
+}
+
+app.on('ready', () => {
+  createWindow()
+  createTransferWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -53,11 +100,11 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
+  } else if (transferWindow === null) {
+    createTransferWindow()
   }
 })
 
-const electron = require('electron')
-const ipc = electron.ipcMain
 //登录窗口最小化
 ipc.on('window-min', function() {
   mainWindow.minimize()
@@ -76,37 +123,6 @@ ipc.on('window-close', function() {
     transferWindow.close()
   }
 })
-
-let msg
-
-ipc.on('open_transfer_window', function(event_main, _msg) {
-  // event_main.sender.send('winURL', winURL)
-
-  msg = _msg
-  transferWindow = new BrowserWindow({
-    height: 430,
-    width: 300,
-    frame: false
-  })
-
-  // 转账窗口获取消息
-  ipc.on('transfer_get_msg', (event, _) => {
-    event.returnValue = msg
-  })
-
-  // 转账窗口发布消息到主窗口
-  ipc.on('transfer_pub_msg', (event, pub_msg) => {
-    // 发送到主窗口
-    event_main.sender.send('transfer_on_msg', pub_msg)
-  })
-
-  transferWindow.loadURL(winURL + '#/transfer')
-
-  transferWindow.on('closed', () => {
-    transferWindow = null
-  })
-})
-
 /**
  * Auto Updater
  *

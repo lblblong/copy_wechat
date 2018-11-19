@@ -47,7 +47,7 @@
     <footer>
       <div class="toolbar">
         <div>
-          <span @click="openTransferWindow"><span class="icon-emoji"></span></span>
+          <span @click="expressionShow"><span class="icon-emoji"></span></span>
           <span><span class="icon-file"></span></span>
           <span><span class="icon-cut"></span></span>
           <span><span class="icon-message"></span></span>
@@ -65,10 +65,12 @@
       </div>
     </footer>
 
+    <dialog-expression :event="event_expression"></dialog-expression>
   </div>
 </template>
 
 <script>
+import EventEmitter from 'eventemitter3'
 const ipcRenderer = require('electron').ipcRenderer
 import { Message } from 'element-ui'
 import dayjs from 'dayjs'
@@ -87,6 +89,8 @@ import MessageFile from './messages/message_file'
 import MessageCallVoice from './messages/message_call_voice'
 import MessageCallVideo from './messages/message_call_video'
 
+import DialogExpression from './dialogs/expression'
+
 export default {
   components: {
     ChatHeader,
@@ -99,7 +103,8 @@ export default {
     MessageVideoL,
     MessageFile,
     MessageCallVoice,
-    MessageCallVideo
+    MessageCallVideo,
+    DialogExpression
   },
   computed: {
     ...mapGetters(['nowChat', 'self', 'nowUser'])
@@ -107,10 +112,14 @@ export default {
   data() {
     return {
       message: '',
-      constant: constant
+      constant: constant,
+      event_expression: null
     }
   },
   created() {
+    this.event_expression = new EventEmitter()
+    this.event_expression.on('selExpression', this.selExpression)
+
     window.addEventListener('keydown', e => {
       if (e.ctrlKey && e.keyCode == 83) {
         this.changeUser(constant.MSG_FROM_SELF)
@@ -131,6 +140,7 @@ export default {
     },
     submit() {
       if (!this.message) return
+      this.message = this.messageTransferHTML(this.message)
       this.pushMessage({
         chat_id: this.nowChat.id,
         id: this.nowChat.msgs.length,
@@ -177,6 +187,51 @@ export default {
       })
       console.log('发送转账消息', msg)
       ipcRenderer.send('open_transfer_window', JSON.stringify(msg))
+    },
+    expressionShow() {
+      this.event_expression.emit('open')
+    },
+    selExpression(expression) {
+      this.message = this.message + `[i-${expression.index}]`
+    },
+    messageTransferHTML(str) {
+      let strs = str.split('[i-')
+      let result = []
+      for (let i = 0; i < strs.length; i++) {
+        let cons = strs[i].split(']')
+        if (cons.length == 2) {
+          result.push({
+            content: cons[0],
+            expression: true
+          })
+          result.push({
+            content: cons[1],
+            expression: false
+          })
+        } else {
+          cons.forEach(it => {
+            result.push({
+              content: it,
+              expression: false
+            })
+          })
+        }
+      }
+      let rep = ''
+      result.forEach(it => {
+        console.log(it)
+        if (it.expression) {
+          let img = window.expressions.find(itt => {
+            return itt.index == it.content
+          })
+          console.log(img)
+          rep = rep + `<img src="${img.img}"/>`
+        } else {
+          rep = rep + it.content
+        }
+      })
+      console.log(rep)
+      return rep
     }
   }
 }

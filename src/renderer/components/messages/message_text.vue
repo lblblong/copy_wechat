@@ -33,7 +33,13 @@ export default {
     font-weight: 500;
     max-width: 400px;
     .message {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       line-height: 1.5;
+      img {
+        margin: 0px 8px;
+      }
     }
     .arrows {
       position: absolute;

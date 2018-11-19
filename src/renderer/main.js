@@ -42,6 +42,15 @@ Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Upload)
 
+window.expressions = []
+for (let i = 1; i <= 130; i++) {
+  let img = require(`./assets/expressions/${i}.gif`)
+  window.expressions.push({
+    img,
+    index: i
+  })
+}
+
 import EventEmitter from 'eventemitter3'
 window.globalEvent = new EventEmitter()
 

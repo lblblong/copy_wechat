@@ -61,7 +61,7 @@
         <textarea rows="3" v-model="message" @keyup.enter="submit"></textarea>
       </div>
       <div class="sent_warp">
-        <button>发送(S)</button>
+        <button @click="submit">发送(S)</button>
       </div>
     </footer>
 
@@ -225,7 +225,7 @@ export default {
             return itt.index == it.content
           })
           console.log(img)
-          rep = rep + `<img src="${img.img}" style="width:23px;height:23px;"/>`
+          rep = rep + `<img src="${img.img}" style="width:24px;height:24px;margin: 0 3px;"/>`
         } else {
           rep = rep + it.content
         }

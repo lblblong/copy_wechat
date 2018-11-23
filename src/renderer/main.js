@@ -43,8 +43,8 @@ Vue.use(DropdownMenu)
 Vue.use(Upload)
 
 window.expressions = []
-for (let i = 1; i <= 130; i++) {
-  let img = require(`./assets/expressions/${i}.gif`)
+for (let i = 1; i <= 249; i++) {
+  let img = require(`./assets/expressions/${i}.png`)
   window.expressions.push({
     img,
     index: i

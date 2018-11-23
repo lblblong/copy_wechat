@@ -39,6 +39,8 @@ export default {
       line-height: 1.5;
       img {
         margin: 0px 8px;
+        width: 30px;
+        height: 30px;
       }
     }
     .arrows {

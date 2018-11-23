@@ -37,5 +37,7 @@ export default {
 <style scoped lang="scss">
 img {
   cursor: pointer;
+  width: 30px;
+  height: 30px;
 }
 </style>

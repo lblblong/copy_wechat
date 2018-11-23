@@ -225,7 +225,7 @@ export default {
             return itt.index == it.content
           })
           console.log(img)
-          rep = rep + `<img src="${img.img}"/>`
+          rep = rep + `<img src="${img.img}" style="width:23px;height:23px;"/>`
         } else {
           rep = rep + it.content
         }

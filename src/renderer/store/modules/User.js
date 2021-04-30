@@ -145,8 +145,8 @@ const def = {
   nowUser: constant.MSG_FROM_SELF,
 }
 
-// const state = store.get('data', def)
-const state = def
+const state = store.get('data', def)
+// const state = def
 state._nowChat = state.chats[0]
 
 const mutations = {

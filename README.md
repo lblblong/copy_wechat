@@ -53,7 +53,7 @@ npm run build
 
 #### 转账与收账消息
 
-![](https://github.com/lblblong/copy_wechat/blob/master/images/msg/transfer.png?raw=true)
+![](https://github.com/lblblong/copy_wechat/blob/master/images/msg/transfer.gif?raw=true)
 
 
 #### 语音与视频通话消息

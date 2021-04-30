@@ -1,10 +1,10 @@
-![](https://raw.githubusercontent.com/lblblong/copy_wechat/master/images/img1.png)
+![](https://github.com/lblblong/copy_wechat/blob/master/images/img1.png?raw=true)
 
-![](https://raw.githubusercontent.com/lblblong/copy_wechat/master/images/img2.png)
+![](https://github.com/lblblong/copy_wechat/blob/master/images/img2.png?raw=true)
 
-![](https://raw.githubusercontent.com/lblblong/copy_wechat/master/images/img3.png)
+![](https://github.com/lblblong/copy_wechat/blob/master/images/img3.png?raw=true)
 
-![](https://raw.githubusercontent.com/lblblong/copy_wechat/master/images/img4.png)
+![](https://github.com/lblblong/copy_wechat/blob/master/images/img4.png?raw=true)
 
 
 
